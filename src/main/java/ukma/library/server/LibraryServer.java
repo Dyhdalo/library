@@ -2,6 +2,11 @@ package ukma.library.server;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+
+import ukma.library.server.service.LibraryService;
+import ukma.library.server.service.LibraryServiceImpl;
 
 public class LibraryServer {
 
@@ -15,9 +20,9 @@ public class LibraryServer {
 	
 	public void runServer() throws IllegalArgumentException, NotBoundException, RemoteException 
     {
-    	/*ManageBook helloImpl = new ManageBookImpl();
+		LibraryService libraryImpl = new LibraryServiceImpl();
         Registry registry = LocateRegistry.createRegistry(Integer.parseInt(port, 10));
-        registry.rebind(SERVER_NAME, helloImpl);*/
+        registry.rebind(SERVER_NAME, libraryImpl);
     }
 	
     public static void main(String[] args) throws RemoteException,IllegalArgumentException, NotBoundException {
