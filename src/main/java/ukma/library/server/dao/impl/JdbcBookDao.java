@@ -1,4 +1,4 @@
-package ukma.library.server.dao;
+package ukma.library.server.dao.impl;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,10 +6,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import ukma.library.server.dao.BookDao;
 import ukma.library.server.entity.Book;
 import ukma.library.server.service.LibraryService;
 
-public class JdbcBookDao implements BookDao{
+public class JdbcBookDao implements BookDao {
 
 	@Override
 	public Book myTest() {

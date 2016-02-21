@@ -4,10 +4,10 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 import ukma.library.server.dao.BookDao;
-import ukma.library.server.dao.JdbcBookDao;
-import ukma.library.server.dao.JdbcOrderDao;
-import ukma.library.server.dao.JdbcSearchDao;
-import ukma.library.server.dao.JdbcUserDao;
+import ukma.library.server.dao.impl.JdbcBookDao;
+import ukma.library.server.dao.impl.JdbcOrderDao;
+import ukma.library.server.dao.impl.JdbcSearchDao;
+import ukma.library.server.dao.impl.JdbcUserDao;
 import ukma.library.server.dao.OrderDao;
 import ukma.library.server.dao.SearchDao;
 import ukma.library.server.dao.UserDao;
