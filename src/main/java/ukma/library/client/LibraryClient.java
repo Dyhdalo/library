@@ -26,7 +26,7 @@ public static void main(String[] args) throws RemoteException, NamingException, 
 		
 		Book titleBook = library.myTest();
 		
-		System.out.println(titleBook.test);
+		//System.out.println(titleBook.test);
 		
 	}
 	
