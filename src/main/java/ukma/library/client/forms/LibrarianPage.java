@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -186,7 +187,12 @@ public class LibrarianPage extends JFrame implements ActionListener{
 		if (e.getSource() == addBook) {
 			(new BookTable()).showEventDemo();
 		}else if (e.getSource() == addCopy) {
-			(new CopiesPage(1)).showEventDemo();
+			int[] rows = allBooks.getSelectedRows();
+			if (rows.length > 0){
+				(new CopiesPage((Integer)allBooks.getValueAt(rows[0], 0))).showEventDemo();
+			}else{
+				JOptionPane.showMessageDialog(null, "Потрібно вибрати книгу!!!", "", JOptionPane.INFORMATION_MESSAGE);
+			}
 		} else if (e.getSource() == changeBook) {
 			System.out.println("changeBook");
 		}else if (e.getSource() == addReader) {
