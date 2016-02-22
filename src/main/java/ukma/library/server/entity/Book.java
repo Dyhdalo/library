@@ -17,6 +17,14 @@ public class Book implements Serializable{
 	public Book(){
 		//test = "Bad!";
 	}
+	
+	public Book(int id, String title, String author, String edition, int year) {
+		this.id = id;
+		this.title = title;
+		this.author = author;
+		this.edition = edition;
+		this.year = year;
+	}
 
 	public void ok(){
 		//test = "Ok!";
