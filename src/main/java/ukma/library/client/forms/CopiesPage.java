@@ -91,7 +91,7 @@ public class CopiesPage extends JFrame {
                 int isbn = Integer.parseInt(isbnField.getText());
                 Copy c = new Copy(isbn, bookId);
                 //TODO: Add a new copy to the database
-                // back();
+                back();
             }
         }
     }
