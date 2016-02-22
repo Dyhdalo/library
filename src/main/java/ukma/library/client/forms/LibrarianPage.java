@@ -15,6 +15,8 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import ukma.library.client.LibraryClient;
 
@@ -113,6 +115,18 @@ public class LibrarianPage extends JFrame implements ActionListener{
 		tabby.addTab("Черги на літературу", panel3);
 		tabby.addTab("Замовлення", panel4);
 		add(tabby);
+		
+		tabby.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				allBooks.clearSelection();
+				allReaders.clearSelection();
+				allQueues.clearSelection();
+				allOrders.clearSelection();
+				}
+			});
+		
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		pack();
 		setVisible(true);
@@ -202,7 +216,7 @@ public class LibrarianPage extends JFrame implements ActionListener{
 		}else if (e.getSource() == addReaderToQueue) {
 			System.out.println("addReaderToQueue");
 		}else if (e.getSource() == addOrder) {
-			System.out.println("addOrder");
+			(new OrderTable()).showEventDemo();
 		}else if (e.getSource() == closeOrder) {
 			System.out.println("closeOrder");
 		}

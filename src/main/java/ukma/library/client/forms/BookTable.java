@@ -1,9 +1,12 @@
 package ukma.library.client.forms;
 
+import ukma.library.client.forms.tables.BooksTable;
 import ukma.library.server.entity.Book;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import javax.swing.*;
@@ -134,7 +137,17 @@ public class BookTable extends JFrame{
             b.setEdition(editionField.getText());
             b.setYear(Integer.parseInt(yearSpinner.getValue().toString()));
             
-            //TODO: Add a new book to the database
+            /*
+             * ArrayList<Book> books;
+             * try {
+							books = (ArrayList<Book>) library.getAllBooks();
+						} catch (RemoteException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						
+						librarianForm.getAllBooksTable().setModel(new BooksTable(books));
+             */
 
             back();
         }
