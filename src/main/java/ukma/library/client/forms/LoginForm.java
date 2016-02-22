@@ -18,7 +18,7 @@ public class LoginForm extends JFrame{
 	JPasswordField passwordField;
 	JComboBox role;
 	JButton ok;
-	final String[] roles = {"бібліотекар", "читач"};
+	final String[] roles = {"Бібліотекар", "Читач"};
 	
 	public LoginForm(){
 		

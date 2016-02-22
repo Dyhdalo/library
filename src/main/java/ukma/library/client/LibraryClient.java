@@ -11,12 +11,15 @@ import java.util.ArrayList;
 
 import javax.naming.NamingException;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import ukma.library.client.forms.LibrarianPage;
 import ukma.library.client.forms.LoginForm;
 import ukma.library.client.forms.ReaderSearchPage;
 import ukma.library.client.forms.tables.BooksTable;
+import ukma.library.client.forms.tables.ReadersTable;
 import ukma.library.server.entity.Book;
+import ukma.library.server.entity.User;
 import ukma.library.server.service.LibraryService;
 
 public class LibraryClient{
@@ -25,19 +28,20 @@ public class LibraryClient{
 	
 	public static LibraryService library;
 	
-	static ArrayList<Book> allBooks = new ArrayList<Book>();
+	private static ArrayList<Book> books;
+	
+	private static ArrayList<User> users;
+	
+	private static int idOfUser;
+	private static String roleOfUser;
 	
 	static LibrarianPage librarianForm;
 	
 	public static void main(String[] args) throws RemoteException, NamingException, MalformedURLException, NotBoundException{
 		
-		/*Registry registry = LocateRegistry.getRegistry("localhost", 8888);
+		Registry registry = LocateRegistry.getRegistry("localhost", 8888);
 		
-		library = (LibraryService) registry.lookup(SERVER_NAME);*/
-		
-		allBooks.add(new Book(1,"asd","qw","123",1994));
-		allBooks.add(new Book(2,"asdasd","er","534",2012));
-		allBooks.add(new Book(3,"ertg","gsd","897",2001));
+		library = (LibraryService) registry.lookup(SERVER_NAME);
 		
 		LoginForm loginForm = new LoginForm();
 	
@@ -45,11 +49,59 @@ public class LibraryClient{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				loginForm.setVisible(false);
 				
-				librarianForm = new LibrarianPage();
+				String login = loginForm.getLoginField().getText();
+				@SuppressWarnings("deprecation")
+				String password = loginForm.getPasswordField().getText();
 				
-				librarianForm.getAllBooksTable().setModel(new BooksTable(allBooks));
+				try {
+					users = (ArrayList<User>) library.getAllUsers();
+				} catch (RemoteException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				idOfUser = getUserId(users, login, password);
+				roleOfUser = getUserRole(users, login, password);
+				
+				if(roleOfUser==null) JOptionPane.showMessageDialog(null, "Неправильний логін/пароль!!!", "", JOptionPane.INFORMATION_MESSAGE);
+				
+				else
+					if(roleOfUser.equals("Бібліотекар") && loginForm.getRole().getSelectedItem().equals("Бібліотекар")){
+						
+						loginForm.setVisible(false);
+						
+						librarianForm = new LibrarianPage();
+						
+						try {
+							books = (ArrayList<Book>) library.getAllBooks();
+						} catch (RemoteException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						
+						librarianForm.getAllBooksTable().setModel(new BooksTable(books));
+						librarianForm.getAllReadersTable().setModel(new ReadersTable(users));
+					}
+				
+			}
+
+			private String getUserRole(ArrayList<User> users, String login,
+					String password) {
+				for (User u : users) {
+					if (u.getName().equals(login) && u.getPassword().equals(password))
+						return u.getRole();
+				}
+				return null;
+			}
+
+			private int getUserId(ArrayList<User> users, String login,
+					String password) {
+				for (User u : users) {
+					if (u.getName().equals(login) && u.getPassword().equals(password))
+						return u.getId();
+				}
+				return -1;
 			}
 			
 		});

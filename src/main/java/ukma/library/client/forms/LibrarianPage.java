@@ -51,8 +51,10 @@ public class LibrarianPage extends JFrame implements ActionListener{
 		addBook.addActionListener(this);
 
 		addCopy = new JButton("Додати примірник");
+		addCopy.addActionListener(this);
 
 		changeBook = new JButton("Редагувати книгу");
+		changeBook.addActionListener(this);
 
 		JPanel newPanel = new JPanel();
 		newPanel.add(addBook);
@@ -66,8 +68,10 @@ public class LibrarianPage extends JFrame implements ActionListener{
 		allReaders();
 		
 		addReader = new JButton("Додати читача");
+		addReader.addActionListener(this);
 
 		changeReader = new JButton("Редагувати читача");
+		changeReader.addActionListener(this);
 
 		JPanel newPanel2 = new JPanel();
 		newPanel2.add(addReader);
@@ -80,6 +84,7 @@ public class LibrarianPage extends JFrame implements ActionListener{
 		allQueues();
 		
 		addReaderToQueue = new JButton("Додати читача до черги");
+		addReaderToQueue.addActionListener(this);
 
 		JPanel newPanel3 = new JPanel();
 		newPanel3.add(addReaderToQueue);
@@ -91,8 +96,10 @@ public class LibrarianPage extends JFrame implements ActionListener{
 		allOrders();
 		
 		addOrder = new JButton("Додати замовлення");
+		addOrder.addActionListener(this);
 
 		closeOrder = new JButton("Закрити замовлення");
+		closeOrder.addActionListener(this);
 
 		JPanel newPanel4 = new JPanel();
 		newPanel4.add(addOrder);

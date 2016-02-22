@@ -2,6 +2,7 @@ package ukma.library.server.service;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.List;
 
 import ukma.library.server.dao.BookDao;
 import ukma.library.server.dao.impl.JdbcBookDao;
@@ -12,6 +13,7 @@ import ukma.library.server.dao.OrderDao;
 import ukma.library.server.dao.SearchDao;
 import ukma.library.server.dao.UserDao;
 import ukma.library.server.entity.Book;
+import ukma.library.server.entity.User;
 
 public class LibraryServiceImpl extends UnicastRemoteObject implements LibraryService{
 
@@ -28,8 +30,12 @@ public class LibraryServiceImpl extends UnicastRemoteObject implements LibrarySe
 		userDao = new JdbcUserDao();
 	}
 	
-	public Book myTest() throws RemoteException{
-		return bookDao.myTest();
+	public List<User> getAllUsers() throws RemoteException{
+		return userDao.getAllUsers();
+	}
+	
+	public List<Book> getAllBooks() throws RemoteException{
+		return bookDao.getAllBooks();
 	}
 
 }

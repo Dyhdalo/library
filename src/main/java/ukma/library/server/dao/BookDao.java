@@ -6,8 +6,6 @@ import java.util.List;
 
 public interface BookDao {
 
-	public Book myTest();
-
 	public boolean addBook(String title, String author, int year, String edition);
 
 	public Book getBook(int id);
