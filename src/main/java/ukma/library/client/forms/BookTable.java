@@ -5,11 +5,12 @@ import javafx.scene.control.Spinner;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Calendar;
+
 import javax.swing.*;
 
-public class BookTable {
+public class BookTable extends JFrame{
 
-    private JFrame mainFrame;
+   // private JFrame mainFrame;
 
     private JLabel headerLabel;
     private JLabel errorLabel;
@@ -31,6 +32,7 @@ public class BookTable {
     private JPanel mainPanel;
 
     public BookTable(){
+    	super("Add book");
         prepareGUI();
     }
 
@@ -40,34 +42,30 @@ public class BookTable {
     }
 
     private void prepareGUI(){
-        mainFrame = new JFrame("Add book");
-        mainFrame.setSize(400,400);
-        mainFrame.setLayout(new GridLayout(4, 1));
+       // mainFrame = new JFrame("Add book");
+        this.setSize(400,400);
+        this.setLayout(new GridLayout(4, 1));
 
         headerLabel = new JLabel("Add a new Book", JLabel.CENTER );
         errorLabel = new JLabel("Title", JLabel.CENTER );
         errorLabel.setVisible(false);
 
-        mainFrame.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent windowEvent){
-                System.exit(0);
-            }
-        });
         mainPanel = new JPanel();
         mainPanel.setLayout(new GridLayout(5, 1));
 
         controlPanel = new JPanel();
         controlPanel.setLayout(new FlowLayout());
 
-        mainFrame.add(headerLabel);
-        mainFrame.add(errorLabel);
-        mainFrame.add(mainPanel);
+        this.add(headerLabel);
+        this.add(errorLabel);
+        this.add(mainPanel);
 
-        mainFrame.add(controlPanel);
-        mainFrame.setVisible(true);
+        this.add(controlPanel);
+        this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        this.setVisible(true);
     }
 
-    private void showEventDemo(){
+    void showEventDemo(){
         titleLabel = new JLabel("Title", JLabel.RIGHT );
         authorLabel = new JLabel("Author", JLabel.RIGHT );
         editionLabel = new JLabel("Edition", JLabel.RIGHT );
@@ -109,7 +107,7 @@ public class BookTable {
         controlPanel.add(addButton);
         controlPanel.add(backButton);
 
-        mainFrame.setVisible(true);
+        this.setVisible(true);
     }
 
 

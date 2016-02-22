@@ -42,5 +42,10 @@ public class BooksTable extends AbstractTableModel{
 		
 		return null;
 	}
+	
+	@Override
+	public String getColumnName(int column) {
+				return columnNames[column];
+	}
 
 }

@@ -2,6 +2,8 @@ package ukma.library.client.forms;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -10,9 +12,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
-public class LibrarianPage extends JFrame{
+import ukma.library.client.LibraryClient;
+
+public class LibrarianPage extends JFrame implements ActionListener{
 
 	JPanel panel1;
 	JPanel panel2;
@@ -43,6 +48,7 @@ public class LibrarianPage extends JFrame{
 		allBooks();
 
 		addBook = new JButton("Додати книгу");
+		addBook.addActionListener(this);
 
 		addCopy = new JButton("Додати примірник");
 
@@ -166,6 +172,13 @@ public class LibrarianPage extends JFrame{
 	
 	public JTable getAllOrdersTable(){
 		return this.allOrders;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == addBook) {
+			(new BookTable()).showEventDemo();
+		} 
 	}
 	
 }

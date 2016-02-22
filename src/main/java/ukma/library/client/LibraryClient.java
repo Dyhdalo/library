@@ -19,9 +19,11 @@ import ukma.library.client.forms.tables.BooksTable;
 import ukma.library.server.entity.Book;
 import ukma.library.server.service.LibraryService;
 
-public class LibraryClient {
+public class LibraryClient{
 
 	public static final String SERVER_NAME = "Server";
+	
+	public static LibraryService library;
 	
 	static ArrayList<Book> allBooks = new ArrayList<Book>();
 	
@@ -31,7 +33,7 @@ public class LibraryClient {
 		
 		/*Registry registry = LocateRegistry.getRegistry("localhost", 8888);
 		
-		final LibraryService library = (LibraryService) registry.lookup(SERVER_NAME);*/
+		library = (LibraryService) registry.lookup(SERVER_NAME);*/
 		
 		allBooks.add(new Book(1,"asd","qw","123",1994));
 		allBooks.add(new Book(2,"asdasd","er","534",2012));
@@ -51,8 +53,6 @@ public class LibraryClient {
 			}
 			
 		});
-	
-		//System.out.println(titleBook.test);
 		
 	}
 	
