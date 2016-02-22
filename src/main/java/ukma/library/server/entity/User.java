@@ -13,6 +13,9 @@ public class User implements Serializable{
 	private String password;
 
 	private String role;
+
+	public User() {
+	}
 	
 	public User(int id, String name, String phone, String password, String role) {
 		super();

@@ -7,4 +7,8 @@ import ukma.library.server.entity.User;
 public interface UserDao {
 
 	public List<User> getAllUsers();
+
+	public User getUserById(int id);
+
+	public List<User> getUserByRole(int roleId);
 }

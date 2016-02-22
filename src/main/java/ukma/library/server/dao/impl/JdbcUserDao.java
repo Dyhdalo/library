@@ -8,35 +8,76 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.jdbc.core.RowMapper;
 import ukma.library.server.dao.UserDao;
-import ukma.library.server.entity.Book;
 import ukma.library.server.entity.User;
 import ukma.library.server.service.LibraryService;
 
 public class JdbcUserDao implements UserDao {
 
-	public List<User> getAllUsers(){
-		
-		ArrayList<User> users = new ArrayList<User>();
-		
-		try (Connection conn = DriverManager.getConnection(LibraryService.MYSQL_URL)){
-							PreparedStatement statement = null;
-							ResultSet rs = null;
+    private static Connection connection;
+    private static ResultSet resultSet;
+    private static PreparedStatement statement;
 
-							try {
-									statement = conn.prepareStatement("SELECT * from acsm_b775c39c99325aa.User INNER JOIN acsm_b775c39c99325aa.User_Role on User.user_role=User_Role.id_role");
-									rs = statement.executeQuery();
-									while (rs.next()) {
-										users.add(new User(rs.getInt("id_user"),rs.getString("name"),rs.getString("phone"),rs.getString("password"),rs.getString("role")));
-									}
-							} catch (SQLException se) {
-									System.out.println("SQL Error: " + se);
-							}
-							}catch (SQLException se) {
-								System.out.println("Connection failed: " + se);
-							}
-		
-		return users;
-	}
-	
+    private static final String USER_TABLE_NAME = " acsm_b775c39c99325aa.User ";
+    private static final String USER_ROLE_TABLE_NAME = " acsm_b775c39c99325aa.User_Role ";
+
+    public JdbcUserDao() {
+        if (connection == null)
+            try {
+                connection = DriverManager.getConnection(LibraryService.MYSQL_URL);
+            } catch (SQLException e) {
+                System.out.println("Connection failed: " + e);
+            }
+    }
+
+    public List<User> getAllUsers() {
+        String sql = "SELECT * FROM" + USER_TABLE_NAME + "INNER JOIN" + USER_ROLE_TABLE_NAME
+                + "on User.user_role=User_Role.id_role";
+        return selectUserList(sql);
+    }
+
+    public User getUserById(int id) {
+        String sql = "SELECT * FROM" + USER_TABLE_NAME + "INNER JOIN" + USER_ROLE_TABLE_NAME
+                + "on User.user_role=User_Role.id_role WHERE User.id_user = " + id;
+        List<User> users = selectUserList(sql);
+        return users == null ? null : users.get(0);
+    }
+
+    public List<User> getUserByRole(int roleId) {
+        String sql = "SELECT * FROM" + USER_TABLE_NAME + "INNER JOIN" + USER_ROLE_TABLE_NAME
+                + "on User.user_role=User_Role.id_role WHERE User_Role.id_role = " + roleId;
+        return selectUserList(sql);
+    }
+
+    private List<User> selectUserList(String sql) {
+        ArrayList<User> users = new ArrayList<User>();
+        try {
+            statement = connection.prepareStatement(sql);
+            resultSet = statement.executeQuery();
+            int row = 0;
+            while (resultSet.next()) {
+                users.add(userMapper.mapRow(resultSet, row++));
+            }
+
+        } catch (SQLException e) {
+            System.out.println("SQL Error: " + e);
+        }
+        return users;
+    }
+
+    private static final RowMapper<User> userMapper = new RowMapper<User>() {
+
+        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+            User user = new User();
+            user.setId(resultSet.getInt("id_user"));
+            user.setName(resultSet.getString("name"));
+            user.setPhone(resultSet.getString("phone"));
+            user.setPassword(resultSet.getString("password"));
+            user.setRole(resultSet.getString("role"));
+            return user;
+        }
+    };
+
+
 }
