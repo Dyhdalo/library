@@ -13,9 +13,13 @@ import ukma.library.server.service.LibraryService;
 
 public class JdbcBookDao implements BookDao {
 
-	private final String GET_ALL_BOOKS = "SELECT * from acsm_b775c39c99325aa.Book";
+	private final java.lang.String GET_BOOK_WITH_TITLE = "SELECT * FROM acsm_b775c39c99325aa.book WHERE title = ?";
 
-	private final String ADD_NEW_BOOK = "INSERT INTO acsm_b775c39c99325aa.Book (author, title, edition ,year) VALUES (?,?,?,?)";
+	private final String GET_ALL_BOOKS = "SELECT * FROM acsm_b775c39c99325aa.book";
+
+	private final String ADD_NEW_BOOK = "INSERT INTO acsm_b775c39c99325aa.book (author, title, edition ,year) VALUES (?,?,?,?)";
+
+	private final String GET_BOOK_WITH_ID = "SELECT * FROM acsm_b775c39c99325aa.book WHERE id_book = ?";
 
 
 	private static Connection createConnection(){
@@ -48,7 +52,8 @@ public class JdbcBookDao implements BookDao {
 			statement.setString(1,author);
 			statement.setString(2,title);
 			statement.setString(3,edition);
-			statement.setDate(4,new Date(date.getTime()));
+			statement.setDate(4, new Date(date.getTime()));
+			statement.executeUpdate();
 		} catch (SQLException e) {
 			flag = false;
 			e.printStackTrace();
@@ -59,11 +64,36 @@ public class JdbcBookDao implements BookDao {
 	}
 
 	public Book getBook(int id) {
-		return null;
+
+		Connection conn = createConnection();
+		PreparedStatement statement = null;
+		Book book = null;
+
+		try {
+			statement = conn.prepareStatement(GET_BOOK_WITH_ID);
+			statement.setInt(1,id);
+			book = mapRow(statement.executeQuery());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return book;
 	}
 
 	public Book getBook(String title) {
-		return null;
+		Connection conn = createConnection();
+		PreparedStatement statement = null;
+		Book book = null;
+
+		try {
+			statement = conn.prepareStatement(GET_BOOK_WITH_TITLE);
+			statement.setString(1, title);
+			book = mapRow(statement.executeQuery());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return book;
 	}
 
 	public List<Book> getAllBooks() {
