@@ -1,6 +1,6 @@
 package ukma.library.client.forms;
 
-import javafx.scene.control.Spinner;
+import ukma.library.server.entity.Book;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -9,9 +9,6 @@ import java.util.Calendar;
 import javax.swing.*;
 
 public class BookTable extends JFrame{
-
-   // private JFrame mainFrame;
-
     private JLabel headerLabel;
     private JLabel errorLabel;
 
@@ -24,7 +21,7 @@ public class BookTable extends JFrame{
     private JTextField titleField;
     private JTextField authorField;
     private JTextField keyWordsField;
-    private JTextField editorField;
+    private JTextField editionField;
     private JSpinner yearSpinner;
 
 
@@ -43,11 +40,11 @@ public class BookTable extends JFrame{
 
     private void prepareGUI(){
        // mainFrame = new JFrame("Add book");
-        this.setSize(400,400);
+        this.setSize(350,300);
         this.setLayout(new GridLayout(4, 1));
 
-        headerLabel = new JLabel("Add a new Book", JLabel.CENTER );
-        errorLabel = new JLabel("Title", JLabel.CENTER );
+        headerLabel = new JLabel("Додати нову книгу", JLabel.CENTER );
+        errorLabel = new JLabel("", JLabel.CENTER );
         errorLabel.setVisible(false);
 
         mainPanel = new JPanel();
@@ -66,15 +63,15 @@ public class BookTable extends JFrame{
     }
 
     void showEventDemo(){
-        titleLabel = new JLabel("Title", JLabel.RIGHT );
-        authorLabel = new JLabel("Author", JLabel.RIGHT );
-        editionLabel = new JLabel("Edition", JLabel.RIGHT );
-        yearLabel = new JLabel("Year", JLabel.RIGHT );
-        keyWordsLabel = new JLabel("Key Words", JLabel.RIGHT );
+        titleLabel = new JLabel("Заголовок", JLabel.RIGHT );
+        authorLabel = new JLabel("Автор", JLabel.RIGHT );
+        editionLabel = new JLabel("Видання", JLabel.RIGHT );
+        yearLabel = new JLabel("Рік видання", JLabel.RIGHT );
+        keyWordsLabel = new JLabel("Ключові слова", JLabel.RIGHT );
 
         titleField = new JTextField(70);
         authorField = new JTextField(70);
-        editorField = new JTextField(50);
+        editionField = new JTextField(50);
 
         Calendar calendar = Calendar.getInstance();
         int currentYear = calendar.get(Calendar.YEAR);
@@ -87,8 +84,8 @@ public class BookTable extends JFrame{
 
         keyWordsField = new JTextField(120);
 
-        JButton addButton = new JButton("OK");
-        JButton backButton = new JButton("Back");
+        JButton addButton = new JButton("Додати");
+        JButton backButton = new JButton("Повернутися назад");
 
         addButton.addActionListener(new AddButtonClickListener());
         backButton.addActionListener(new BackButtonClickListener());
@@ -98,7 +95,7 @@ public class BookTable extends JFrame{
         mainPanel.add(authorLabel);
         mainPanel.add(authorField);
         mainPanel.add(editionLabel);
-        mainPanel.add(editorField);
+        mainPanel.add(editionField);
         mainPanel.add(yearLabel);
         mainPanel.add(yearSpinner);
         mainPanel.add(keyWordsLabel);
@@ -126,11 +123,17 @@ public class BookTable extends JFrame{
     private class AddButtonClickListener implements ActionListener{
         public void actionPerformed(ActionEvent e) {
             errorLabel.setVisible(false);
-            if(!validateTextField(titleField.getText(), 5, "Title length must be greater than 5")) return;
-            if(!validateTextField(authorField.getText(), 5, "Author length must be greater than 5")) return;
-            if(!validateTextField(editorField.getText(), 1, "Edition length must be greater than 0")) return;
-            if(!validateTextField(keyWordsField.getText(), 20, "Key words length must be greater than 0")) return;
+            if(!validateTextField(titleField.getText(), 5, "Довжина титулки має бути більша, ніж 5 символів")) return;
+            if(!validateTextField(authorField.getText(), 5, "Довжина автора має бути більшою, ніж 5 символів")) return;
+            if(!validateTextField(editionField.getText(), 1, "Довжина видання має бути не порожньою")) return;
+            if(!validateTextField(keyWordsField.getText(), 20, "Довжина ключових слів має бути більшою, ніж 20 символів")) return;
 
+            Book b = new Book();
+            b.setTitle(titleField.getText());
+            b.setAuthor(authorField.getText());
+            b.setEdition(editionField.getText());
+            b.setYear(Integer.parseInt(yearSpinner.getValue().toString()));
+            
             //TODO: Add a new book to the database
 
             back();

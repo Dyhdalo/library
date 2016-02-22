@@ -43,7 +43,7 @@ public class LibraryClient{
 		
 		library = (LibraryService) registry.lookup(SERVER_NAME);
 		
-		LoginForm loginForm = new LoginForm();
+		final LoginForm loginForm = new LoginForm();
 	
 		loginForm.getButton().addActionListener(new ActionListener(){
 

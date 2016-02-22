@@ -185,7 +185,9 @@ public class LibrarianPage extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == addBook) {
 			(new BookTable()).showEventDemo();
-		} 
+		} else if (e.getSource() == addCopy) {
+			(new CopiesPage(1)).showEventDemo();
+		}
 	}
 	
 }
