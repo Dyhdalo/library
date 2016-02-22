@@ -38,7 +38,7 @@ public class LibrarianPage extends JFrame implements ActionListener{
 	JButton closeOrder;
 
 	public LibrarianPage() {
-		super("Бібліотека НаУКМА");
+		super("Бібліотека НаУКМА | Бібліотекар");
 		setLocation(200, 200);
 
 		JTabbedPane tabby = new JTabbedPane();
@@ -185,7 +185,21 @@ public class LibrarianPage extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == addBook) {
 			(new BookTable()).showEventDemo();
-		} 
+		}else if (e.getSource() == addCopy) {
+			System.out.println("addCopy");
+		}else if (e.getSource() == changeBook) {
+			System.out.println("changeBook");
+		}else if (e.getSource() == addReader) {
+			System.out.println("addReader");
+		}else if (e.getSource() == changeReader) {
+			System.out.println("changeReader");
+		}else if (e.getSource() == addReaderToQueue) {
+			System.out.println("addReaderToQueue");
+		}else if (e.getSource() == addOrder) {
+			System.out.println("addOrder");
+		}else if (e.getSource() == closeOrder) {
+			System.out.println("closeOrder");
+		}
 	}
 	
 }

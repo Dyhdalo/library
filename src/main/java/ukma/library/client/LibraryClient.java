@@ -35,7 +35,8 @@ public class LibraryClient{
 	private static int idOfUser;
 	private static String roleOfUser;
 	
-	static LibrarianPage librarianForm;
+	public static LibrarianPage librarianForm;
+	public static ReaderSearchPage readerForm;
 	
 	public static void main(String[] args) throws RemoteException, NamingException, MalformedURLException, NotBoundException{
 		
@@ -82,7 +83,21 @@ public class LibraryClient{
 						
 						librarianForm.getAllBooksTable().setModel(new BooksTable(books));
 						librarianForm.getAllReadersTable().setModel(new ReadersTable(users));
-					}
+					}else
+						if(roleOfUser.equals("Читач") && loginForm.getRole().getSelectedItem().equals("Читач")){
+							loginForm.setVisible(false);
+							
+							readerForm = new ReaderSearchPage();
+							
+							try {
+								books = (ArrayList<Book>) library.getAllBooks();
+							} catch (RemoteException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+							
+							readerForm.getAllBooksTable().setModel(new BooksTable(books));
+						}
 				
 			}
 
