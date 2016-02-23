@@ -56,7 +56,7 @@ public class ReaderPage extends JFrame {
         this.add(mainPanel);
         this.add(panel);
         panel.add(addButton, BorderLayout.PAGE_END);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setVisible(true);
     }
 
