@@ -210,7 +210,7 @@ public class LibrarianPage extends JFrame implements ActionListener{
 		} else if (e.getSource() == changeBook) {
 			System.out.println("changeBook");
 		}else if (e.getSource() == addReader) {
-			System.out.println("addReader");
+			(new ReaderPage()).showAddReader();
 		}else if (e.getSource() == changeReader) {
 			System.out.println("changeReader");
 		}else if (e.getSource() == addReaderToQueue) {
