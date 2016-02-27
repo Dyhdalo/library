@@ -21,6 +21,8 @@ public class JdbcBookDao implements BookDao {
 
 	private final String GET_BOOK_WITH_ID = "SELECT * FROM acsm_b775c39c99325aa.book WHERE id_book = ?";
 
+	private final String UPDATE_BOOK = "UPDATE acsm_b775c39c99325aa.book SET book.title = ?, book.author = ?, book.edition = ?, book.year = ? WHERE  book.id_book = ?";
+
 
 	private static Connection createConnection(){
 		Connection conn = null;
@@ -61,6 +63,24 @@ public class JdbcBookDao implements BookDao {
 
 		closeConnection(conn);
 			return flag;
+	}
+
+	public void updateBook(int id, String title, String author, String edition, int year ) {
+		Connection conn = createConnection();
+		PreparedStatement statement = null;
+
+		try {
+			statement = conn.prepareStatement(UPDATE_BOOK);
+			statement.setString(1,title);
+			statement.setString(2,author);
+			statement.setString(3,edition);
+			statement.setInt(4,year);
+			statement.setInt(5,id);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		closeConnection(conn);
 	}
 
 	public Book getBook(int id) {
@@ -127,7 +147,7 @@ public class JdbcBookDao implements BookDao {
 		book.setAuthor(rs.getString("author"));
 		book.setTitle(rs.getString("title"));
 		book.setEdition(rs.getString("edition"));
-		book.setYear(rs.getInt("year"));
+		book.setYear(rs.getDate("year").getYear());
 
 		return book;
 	}
