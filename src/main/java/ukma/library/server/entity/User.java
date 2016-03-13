@@ -14,9 +14,24 @@ public class User implements Serializable{
 
 	private String role;
 
+	private enum UserRole{
+		USER ("Читач"),
+		LIBRARIAN("Бібліотекар");
+
+		private String name;
+
+		UserRole(String name) {
+			this.name = name;
+		}
+		public int getRoleId(){
+			if (this.equals(USER)) return 1;
+			return 2;
+		}
+	}
+
 	public User() {
 	}
-	
+
 	public User(int id, String name, String phone, String password, String role) {
 		super();
 		this.id = id;
@@ -109,5 +124,8 @@ public class User implements Serializable{
 		return "User [name=" + name + ", password=" + password + ", role="
 				+ role + "]";
 	}
-	
+
+	public int getRoleId() {
+		return UserRole.valueOf(role).getRoleId();
+	}
 }

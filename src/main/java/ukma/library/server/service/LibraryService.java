@@ -5,6 +5,8 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 import ukma.library.server.entity.Book;
+import ukma.library.server.entity.Order;
+import ukma.library.server.entity.Queue;
 import ukma.library.server.entity.User;
 
 public interface LibraryService extends Remote{
@@ -16,5 +18,16 @@ public interface LibraryService extends Remote{
 	public List<User> getAllUsers() throws RemoteException;
 	
 	public List<Book> getAllBooks() throws RemoteException;
-	
+
+	public boolean addBook(Book book);
+
+	public boolean addUser(User user);
+
+	public boolean addOrder(Order order);
+
+	public boolean addQueue(Queue queue);
+
+	public User getUserByName(String name);
+
+
 }

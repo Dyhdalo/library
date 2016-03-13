@@ -50,6 +50,21 @@ public class JdbcUserDao implements UserDao {
         return selectUserList(sql);
     }
 
+    @Override
+    public boolean addUser(User user) {
+        String sql = "INSERT INTO " + USER_TABLE_NAME + "(name, phone, password, role) " +
+                "VALUES (?, ?, ?, ?)";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setString(1, user.getName());
+        preparedStatement.setString(2, user.getPhone());
+        preparedStatement.setString(3, user.getPassword();
+        preparedStatement.setInt(4, user.getRoleId());
+// execute insert SQL stetement
+        preparedStatement .executeUpdate();
+
+        return users == null ? null : users.get(0);
+    }
+
     private List<User> selectUserList(String sql) {
         ArrayList<User> users = new ArrayList<User>();
         try {

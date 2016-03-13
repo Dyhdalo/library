@@ -13,6 +13,8 @@ import ukma.library.server.dao.OrderDao;
 import ukma.library.server.dao.SearchDao;
 import ukma.library.server.dao.UserDao;
 import ukma.library.server.entity.Book;
+import ukma.library.server.entity.Order;
+import ukma.library.server.entity.Queue;
 import ukma.library.server.entity.User;
 
 public class LibraryServiceImpl extends UnicastRemoteObject implements LibraryService{
@@ -37,5 +39,28 @@ public class LibraryServiceImpl extends UnicastRemoteObject implements LibrarySe
 	public List<Book> getAllBooks() throws RemoteException{
 		return bookDao.getAllBooks();
 	}
+
+	@Override
+	public boolean addBook(Book book) {
+		return bookDao.addBook(book);
+	}
+
+	@Override
+	public boolean addUser(User user) {
+		return userDao.addUser(user);
+	}
+
+	@Override
+	public boolean addOrder(Order order) {
+		return false;
+	}
+
+	@Override
+	public boolean addQueue(Queue queue) {
+		return false;
+	}
+
+
+}
 
 }
