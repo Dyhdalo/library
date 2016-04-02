@@ -54,15 +54,21 @@ public class JdbcUserDao implements UserDao {
     public boolean addUser(User user) {
         String sql = "INSERT INTO " + USER_TABLE_NAME + "(name, phone, password, role) " +
                 "VALUES (?, ?, ?, ?)";
+        try {
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setString(1, user.getName());
         preparedStatement.setString(2, user.getPhone());
-        preparedStatement.setString(3, user.getPassword();
+        preparedStatement.setString(3, user.getPassword());
         preparedStatement.setInt(4, user.getRoleId());
 // execute insert SQL stetement
-        preparedStatement .executeUpdate();
+			preparedStatement .executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-        return users == null ? null : users.get(0);
+        return true;
+       // return users == null ? null : users.get(0);
     }
 
     private List<User> selectUserList(String sql) {

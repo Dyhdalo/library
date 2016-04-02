@@ -152,4 +152,10 @@ public class JdbcBookDao implements BookDao {
 		return book;
 	}
 
+	@Override
+	public boolean addBook(Book book) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

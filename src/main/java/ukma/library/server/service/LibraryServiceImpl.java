@@ -60,7 +60,11 @@ public class LibraryServiceImpl extends UnicastRemoteObject implements LibrarySe
 		return false;
 	}
 
+	@Override
+	public User getUserByName(String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-}
 
 }
