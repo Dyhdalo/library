@@ -2,20 +2,12 @@ package ukma.library.server.service;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Calendar;
 import java.util.List;
 
-import ukma.library.server.dao.BookDao;
-import ukma.library.server.dao.impl.JdbcBookDao;
-import ukma.library.server.dao.impl.JdbcOrderDao;
-import ukma.library.server.dao.impl.JdbcSearchDao;
-import ukma.library.server.dao.impl.JdbcUserDao;
-import ukma.library.server.dao.OrderDao;
-import ukma.library.server.dao.SearchDao;
-import ukma.library.server.dao.UserDao;
-import ukma.library.server.entity.Book;
-import ukma.library.server.entity.Order;
-import ukma.library.server.entity.Queue;
-import ukma.library.server.entity.User;
+import ukma.library.server.dao.*;
+import ukma.library.server.dao.impl.*;
+import ukma.library.server.entity.*;
 
 public class LibraryServiceImpl extends UnicastRemoteObject implements LibraryService{
 
@@ -41,8 +33,10 @@ public class LibraryServiceImpl extends UnicastRemoteObject implements LibrarySe
 	}
 
 	@Override
-	public boolean addBook(Book book) {
-		return bookDao.addBook(book);
+	public boolean addBook(Book book) throws RemoteException {
+		Calendar date = Calendar.getInstance();
+		date.set(book.getYear(),0,0);
+		return bookDao.addBook(book.getTitle(), book.getAuthor(), date.getTime(), book.getEdition());
 	}
 
 	@Override
@@ -51,16 +45,33 @@ public class LibraryServiceImpl extends UnicastRemoteObject implements LibrarySe
 	}
 
 	@Override
-	public boolean addOrder(Order order) {
-		return false;
+	public boolean addOrder(Order order) throws RemoteException {
+		return orderDao.addOrder(order);
 	}
 
 	@Override
-	public boolean addQueue(Queue queue) {
-		return false;
+	public boolean addQueue(Queue queue) throws RemoteException {
+		return searchDao.addQueue(queue);
 	}
 
+	@Override
+	public User getUserByName(String name) throws RemoteException {
+		return userDao.getUserByName(name);
+	}
 
-}
+	@Override
+	public Copy getFreeCopy(Book book) throws RemoteException {
+		return searchDao.getFreeCopy(book.getId());
+	}
+
+	@Override
+	public List<Queue> getActiveQueue() throws RemoteException {
+		return searchDao.getActiveQueue();
+	}
+
+	@Override
+	public List<Queue> getQueueForBook(Book book) throws RemoteException {
+		return searchDao.getQueueForBook(book);
+	}
 
 }

@@ -23,12 +23,24 @@ public class JdbcUserDao implements UserDao {
     private static final String USER_ROLE_TABLE_NAME = " acsm_b775c39c99325aa.User_Role ";
 
     public JdbcUserDao() {
-        if (connection == null)
-            try {
-                connection = DriverManager.getConnection(LibraryService.MYSQL_URL);
-            } catch (SQLException e) {
-                System.out.println("Connection failed: " + e);
-            }
+    }
+
+    private Connection createConnection() {
+        Connection connection = null;
+        try {
+            connection = DriverManager.getConnection(LibraryService.MYSQL_URL);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return connection;
+    }
+
+    private void closeConnection() {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public List<User> getAllUsers() {
@@ -51,23 +63,37 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
+    public User getUserByName(String name) {
+        String sql = "SELECT * FROM" + USER_TABLE_NAME + "INNER JOIN" + USER_ROLE_TABLE_NAME
+                + "on User.user_role=User_Role.id_role WHERE User.name = " + name;
+        List<User> users = selectUserList(sql);
+        return users == null ? null : users.get(0);
+    }
+
+    @Override
     public boolean addUser(User user) {
         String sql = "INSERT INTO " + USER_TABLE_NAME + "(name, phone, password, role) " +
                 "VALUES (?, ?, ?, ?)";
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        preparedStatement.setString(1, user.getName());
-        preparedStatement.setString(2, user.getPhone());
-        preparedStatement.setString(3, user.getPassword();
-        preparedStatement.setInt(4, user.getRoleId());
-// execute insert SQL stetement
-        preparedStatement .executeUpdate();
-
-        return users == null ? null : users.get(0);
+        try {
+            connection = createConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, user.getName());
+            statement.setString(2, user.getPhone());
+            statement.setString(3, user.getPassword());
+            statement.setInt(4, user.getRoleId());
+            statement .executeUpdate();
+        } catch (SQLException e) {
+            return false;
+        } finally {
+            closeConnection();
+        }
+        return true;
     }
 
     private List<User> selectUserList(String sql) {
         ArrayList<User> users = new ArrayList<User>();
         try {
+            connection = createConnection();
             statement = connection.prepareStatement(sql);
             resultSet = statement.executeQuery();
             int row = 0;
@@ -77,6 +103,8 @@ public class JdbcUserDao implements UserDao {
 
         } catch (SQLException e) {
             System.out.println("SQL Error: " + e);
+        } finally {
+            closeConnection();
         }
         return users;
     }

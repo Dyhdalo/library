@@ -16,4 +16,6 @@ public interface OrderDao {
 
     public Order getOrderById(int id);
 
+    public boolean addOrder(Order order);
+
 }

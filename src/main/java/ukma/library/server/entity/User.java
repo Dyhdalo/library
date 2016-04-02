@@ -24,8 +24,8 @@ public class User implements Serializable{
 			this.name = name;
 		}
 		public int getRoleId(){
-			if (this.equals(USER)) return 1;
-			return 2;
+			if (this.equals(USER)) return 2;
+			return 1;
 		}
 	}
 

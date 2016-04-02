@@ -13,4 +13,6 @@ public interface UserDao {
 	public List<User> getUserByRole(int roleId);
 
 	public boolean addUser(User user);
+
+	public User getUserByName(String name);
 }

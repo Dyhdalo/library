@@ -19,13 +19,26 @@ public class JdbcOrderDao implements OrderDao {
     private static final String Order_TABLE_NAME = " acsm_b775c39c99325aa.Order ";
 
     public JdbcOrderDao() {
-        if (connection == null)
-            try {
-                connection = DriverManager.getConnection(LibraryService.MYSQL_URL);
-            } catch (SQLException e) {
-                System.out.println("Connection failed: " + e);
-            }
     }
+
+    private Connection createConnection() {
+        Connection connection = null;
+        try {
+            connection = DriverManager.getConnection(LibraryService.MYSQL_URL);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return connection;
+    }
+
+    private void closeConnection() {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public List<Order> getAllOrders() {
@@ -58,9 +71,32 @@ public class JdbcOrderDao implements OrderDao {
         return orders == null ? null : orders.get(0);
     }
 
+    @Override
+    public boolean addOrder(Order order) {
+        String sql = "INSERT INTO " + Order_TABLE_NAME + "(d_instance, id_user, " +
+                "date_issue, date_return, date_completing) VALUES (?, ?, ?, ?, ?)";
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = createConnection();
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, order.getCopyId());
+            preparedStatement.setInt(2, order.getUserId());
+            preparedStatement.setDate(3, new Date(order.getIssueDate().getTime()));
+            preparedStatement.setDate(4, new Date(order.getReturnDate().getTime()));
+            preparedStatement.setDate(5, new Date(order.getComplitingDate().getTime()));
+            preparedStatement .executeUpdate();
+        } catch (SQLException e) {
+            return false;
+        } finally {
+            closeConnection();
+        }
+        return true;
+    }
+
     private List<Order> selectOrderList(String sql) {
         ArrayList<Order> orders = new ArrayList<Order>();
         try {
+            connection = createConnection();
             statement = connection.prepareStatement(sql);
             resultSet = statement.executeQuery();
             int row = 0;
@@ -70,6 +106,8 @@ public class JdbcOrderDao implements OrderDao {
 
         } catch (SQLException e) {
             System.out.println("SQL Error: " + e);
+        } finally {
+            closeConnection();
         }
         return orders;
     }
