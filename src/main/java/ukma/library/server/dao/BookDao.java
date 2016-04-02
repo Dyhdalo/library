@@ -17,5 +17,4 @@ public interface BookDao {
 
 	public void updateBook(int id, String title, String author, String edition, int year );
 
-	public boolean addBook(Book book);
 }
