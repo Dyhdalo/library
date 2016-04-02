@@ -199,7 +199,7 @@ public class LibrarianPage extends JFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == addBook) {
-			(new BookTable()).showEventDemo();
+			(new BookTable(this)).showEventDemo();
 		}else if (e.getSource() == addCopy) {
 			int[] rows = allBooks.getSelectedRows();
 			if (rows.length > 0){

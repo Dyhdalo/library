@@ -1,11 +1,18 @@
 package ukma.library.client.forms;
 
+import ukma.library.client.LibraryClient;
 import ukma.library.client.forms.tables.BooksTable;
+import ukma.library.client.forms.tables.ReadersTable;
 import ukma.library.server.entity.Book;
+import ukma.library.server.entity.User;
+import ukma.library.server.service.LibraryService;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -30,34 +37,33 @@ public class BookTable extends JFrame{
 
     private JPanel controlPanel;
     private JPanel mainPanel;
-
-    public BookTable(){
-    	super("Add book");
+    private LibrarianPage librarianForm;
+    public BookTable(LibrarianPage librarian){
+        super("Add book");
+        this.librarianForm = librarian;
         prepareGUI();
     }
 
-    public static void main(String[] args){
-        BookTable swingControlDemo = new BookTable();
-        swingControlDemo.showEventDemo();
-    }
-
     private void prepareGUI(){
-       // mainFrame = new JFrame("Add book");
-        this.setSize(350,300);
-        this.setLayout(new GridLayout(4, 1));
+        this.setSize(400, 500);
+        this.setLayout(new GridLayout(3, 1));
 
         headerLabel = new JLabel("Додати нову книгу", JLabel.CENTER );
         errorLabel = new JLabel("", JLabel.CENTER );
         errorLabel.setVisible(false);
 
+        JPanel textPanel = new JPanel();
+        textPanel.setLayout(new GridLayout(2, 1));
+        textPanel.add(headerLabel);
+        textPanel.add(errorLabel);
+        textPanel.setSize(500,150);
         mainPanel = new JPanel();
         mainPanel.setLayout(new GridLayout(5, 1));
 
         controlPanel = new JPanel();
         controlPanel.setLayout(new FlowLayout());
 
-        this.add(headerLabel);
-        this.add(errorLabel);
+        this.add(textPanel);
         this.add(mainPanel);
 
         this.add(controlPanel);
@@ -112,7 +118,8 @@ public class BookTable extends JFrame{
 
 
     private void back(){
-        System.out.println("Back");
+        setVisible(false); //you can't see me!
+        dispose(); //Destroy the JFrame object
     }
     private boolean validateTextField(String field, int minLength, String error) {
         if(field.length() >= minLength) {
@@ -136,18 +143,22 @@ public class BookTable extends JFrame{
             b.setAuthor(authorField.getText());
             b.setEdition(editionField.getText());
             b.setYear(Integer.parseInt(yearSpinner.getValue().toString()));
-            
-            /*
-             * ArrayList<Book> books;
-             * try {
-							books = (ArrayList<Book>) library.getAllBooks();
-						} catch (RemoteException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-						
-						librarianForm.getAllBooksTable().setModel(new BooksTable(books));
-             */
+
+
+            try {
+                // Adding new book
+                LibraryClient.library.addBook(b);
+            } catch (RemoteException e1) {
+                e1.printStackTrace();
+            }
+
+            try {
+                // Reinitialization of book list
+                ArrayList<Book> books = (ArrayList<Book>) LibraryClient.library.getAllBooks();
+                librarianForm.getAllBooksTable().setModel(new BooksTable(books));
+            } catch (RemoteException e1) {
+                e1.printStackTrace();
+            }
 
             back();
         }
