@@ -34,9 +34,7 @@ public class LibraryServiceImpl extends UnicastRemoteObject implements LibrarySe
 
 	@Override
 	public boolean addBook(Book book) throws RemoteException {
-		Calendar date = Calendar.getInstance();
-		date.set(book.getYear(),0,0);
-		return bookDao.addBook(book.getTitle(), book.getAuthor(), date.getTime(), book.getEdition());
+		return bookDao.addBook(book.getTitle(), book.getAuthor(), book.getYear(), book.getEdition());
 	}
 
 	@Override

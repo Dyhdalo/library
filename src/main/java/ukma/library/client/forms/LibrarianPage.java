@@ -205,12 +205,6 @@ public class LibrarianPage extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == addBook) {
 			(new BookTable(this)).showEventDemo();
-			try {
-				LibraryClient.librarianForm.getAllBooksTable().setModel(new BooksTable(LibraryClient.library.getAllBooks()));
-			} catch (RemoteException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 		}else if (e.getSource() == addCopy) {
 			int[] rows = allBooks.getSelectedRows();
 			if (rows.length > 0){

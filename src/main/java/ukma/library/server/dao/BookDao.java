@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface BookDao {
 
-	public boolean addBook(String title, String author, Date date, String edition);
+	public boolean addBook(String title, String author, int date, String edition);
 
 	public Book getBook(int id);
 

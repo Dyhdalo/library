@@ -43,7 +43,7 @@ public class JdbcBookDao implements BookDao {
 	}
 
 
-	public boolean addBook(String title, String author, java.util.Date date, String edition) {
+	public boolean addBook(String title, String author, int date, String edition) {
 		boolean flag = true;
 
 		Connection conn = createConnection();
@@ -54,7 +54,7 @@ public class JdbcBookDao implements BookDao {
 			statement.setString(1,author);
 			statement.setString(2,title);
 			statement.setString(3,edition);
-			statement.setDate(4, new Date(date.getTime()));
+			statement.setInt(4, date);
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			flag = false;
