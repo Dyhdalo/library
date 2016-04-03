@@ -38,5 +38,5 @@ public interface LibraryService extends Remote{
 
 	public Integer getUserIdByLogin(String login) throws RemoteException;
 
-
+	public Book getBookById(Integer id) throws RemoteException;
 }

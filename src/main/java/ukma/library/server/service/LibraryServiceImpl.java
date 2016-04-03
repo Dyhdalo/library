@@ -90,4 +90,10 @@ public class LibraryServiceImpl extends UnicastRemoteObject implements LibrarySe
 	public Integer getUserIdByLogin(String login) throws RemoteException{
 		return null;
 	}
+
+	// TODO: Add implementation
+	// must return Book or null
+	public Book getBookById(Integer id) throws RemoteException{
+		return null;
+	};
 }

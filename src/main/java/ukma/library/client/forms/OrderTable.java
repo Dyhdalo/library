@@ -1,8 +1,10 @@
 package ukma.library.client.forms;
 
 import ukma.library.client.LibraryClient;
+import ukma.library.client.forms.tables.BooksTable;
 import ukma.library.server.entity.Book;
 import ukma.library.server.entity.Copy;
+import ukma.library.server.entity.Order;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,15 +27,14 @@ public class OrderTable extends JFrame{
 
     private JPanel controlPanel;
     private JPanel mainPanel;
-    private JPanel topPanel;
-    private JPanel bodyPanel;
     private JPanel bottomPanel;
     private List<Book> books;
     public OrderTable() {
         super("Зарезервувати примірник");
         try {
             this.books = LibraryClient.library.getAllBooks();
-        } catch (RemoteException e) {
+        } catch (Exception e) {
+            this.books = new ArrayList<>();
             e.printStackTrace();
         }
         prepareGUI();
@@ -42,24 +43,22 @@ public class OrderTable extends JFrame{
     public static void main(String[] args){
         OrderTable swingControlDemo = new OrderTable();
         swingControlDemo.showEventDemo();
+        swingControlDemo.getAllBooksTable().setModel(new BooksTable(new ArrayList<Book>()));
     }
 
     private void prepareGUI(){
-        this.setSize(350,400);
-        this.setLayout(new GridLayout(3, 1));
-
+        this.setSize(800, 300);
+        this.setLayout(new BorderLayout());
         headerLabel = new JLabel("Зарезервувати примірник", JLabel.CENTER );
         errorLabel = new JLabel("", JLabel.CENTER );
         errorLabel.setVisible(false);
 
         mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayout(3, 1));
+        mainPanel.setLayout(new GridLayout(5, 1));
 
         /*topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 */
-        bodyPanel = new JPanel();
-        bodyPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
         bottomPanel = new JPanel();
         bottomPanel.setLayout(new GridLayout(2, 2));
@@ -67,11 +66,18 @@ public class OrderTable extends JFrame{
         //controlPanel = new JPanel();
         //controlPanel.setLayout(new FlowLayout());
 
-        this.add(headerLabel);
-        this.add(errorLabel);
+        mainPanel.add(headerLabel);
+        mainPanel.add(errorLabel);
         this.add(mainPanel);
 
-        mainPanel.add(bodyPanel);
+        allBooks = new JTable();
+        allBooks.setPreferredScrollableViewportSize(new Dimension(700,100));
+        allBooks.setSize(700, 100);
+
+        JScrollPane allBooksPane = new JScrollPane(allBooks);
+        allBooksPane.setPreferredSize(new Dimension(700, 100));
+        allBooksPane.setSize(700, 100);
+        mainPanel.add(allBooksPane, BorderLayout.CENTER);
         mainPanel.add(bottomPanel);
 
         //this.add(controlPanel);
@@ -79,11 +85,12 @@ public class OrderTable extends JFrame{
         this.setVisible(true);
     }
 
-    void showEventDemo(){
-        bookIdLabel = new JLabel("Айді книги: ", JLabel.RIGHT );
-        userIdLabel = new JLabel("Логін користувача: ", JLabel.RIGHT );
+    public JTable getAllBooksTable(){
+        return this.allBooks;
+    }
 
-        bookIdField = new JTextField(70);
+    void showEventDemo(){
+        userIdLabel = new JLabel("Логін користувача: ", JLabel.RIGHT );
         userIdField = new JTextField(70);
 
 
@@ -93,24 +100,9 @@ public class OrderTable extends JFrame{
         addButton.addActionListener(new AddButtonClickListener());
         backButton.addActionListener(new BackButtonClickListener());
 
-        //mainPanel.add(bookIdLabel);
-        //mainPanel.add(bookIdField);
         bottomPanel.add(userIdLabel);
         bottomPanel.add(userIdField);
 
-
-        allBooks = new JTable();
-        allBooks.setPreferredScrollableViewportSize(new Dimension(700,100));
-        allBooks.setSize(800, 300);
-
-        JScrollPane allBooksPane = new JScrollPane(allBooks);
-        allBooksPane.setPreferredSize(new Dimension(700,100));
-        allBooksPane.setSize(800, 300);
-
-        for(Book item : this.books){
-            System.out.println(item);
-        }
-        bodyPanel.add(allBooksPane, BorderLayout.CENTER);
 
         bottomPanel.add(addButton);
         bottomPanel.add(backButton);
@@ -128,6 +120,37 @@ public class OrderTable extends JFrame{
         public void actionPerformed(ActionEvent e) {
             errorLabel.setVisible(false);
             // TODO: Validation and reservation
+            String userLogin = userIdField.getText();
+            Integer userId = null;
+            try {
+                 userId = LibraryClient.library.getUserIdByLogin(userLogin);
+            } catch (RemoteException e1) {
+                e1.printStackTrace();
+            }
+            if(userId == null) {
+                JOptionPane.showMessageDialog(null, "Не існує такого користувача в системі", "", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+            int[] rows = allBooks.getSelectedRows();
+            if (rows.length < 1){
+                JOptionPane.showMessageDialog(null, "Потрібно вибрати книгу!!!", "", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+            Integer bookId = (Integer) allBooks.getValueAt(rows[0], 0);
+            Order order = new Order();
+            order.setUserId(userId);
+
+            try {
+                Book b = LibraryClient.library.getBookById(bookId);
+                Copy copy = LibraryClient.library.getFreeCopy(b);
+                order.setCopyId(copy.getIsbn());
+                LibraryClient.library.addOrder(order);
+            } catch (RemoteException e1) {
+                e1.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Внутрішня помилка. Повторіть спробу пізніше.", "", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+            back();
         }
     }
 

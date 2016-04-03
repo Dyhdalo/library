@@ -3,6 +3,22 @@ package ukma.library.server.entity;
 import java.io.Serializable;
 
 public class Copy implements Serializable{
+    public int getIsbn() {
+        return isbn;
+    }
+
+    public void setIsbn(int isbn) {
+        this.isbn = isbn;
+    }
+
+    public int getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(int bookId) {
+        this.bookId = bookId;
+    }
+
     public enum Status{
         RESERVED,
         FREE
@@ -11,6 +27,8 @@ public class Copy implements Serializable{
     private int isbn;
     private int bookId;
     private Status status = Status.FREE;
+
+    public Copy(){}
 
     public Copy(int isbn, int bookId){
         this.isbn = isbn;

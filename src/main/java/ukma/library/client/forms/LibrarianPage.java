@@ -229,7 +229,13 @@ public class LibrarianPage extends JFrame implements ActionListener{
 			page.showEventDemo();
 			page.getAllBooksTable().setModel(new BooksTable(books));
 		}else if (e.getSource() == addOrder) {
-			(new OrderTable()).showEventDemo();
+			OrderTable page = new OrderTable();
+			page.showEventDemo();
+			try {
+				page.getAllBooksTable().setModel(new BooksTable(LibraryClient.library.getAllBooks()));
+			} catch (RemoteException e1) {
+				e1.printStackTrace();
+			}
 		}else if (e.getSource() == closeOrder) {
 			System.out.println("closeOrder");
 		}
