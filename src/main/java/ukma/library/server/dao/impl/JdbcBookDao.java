@@ -147,7 +147,7 @@ public class JdbcBookDao implements BookDao {
 		book.setAuthor(rs.getString("author"));
 		book.setTitle(rs.getString("title"));
 		book.setEdition(rs.getString("edition"));
-		book.setYear(rs.getDate("year").getYear());
+		book.setYear(rs.getInt("year"));
 
 		return book;
 	}

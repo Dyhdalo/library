@@ -74,6 +74,7 @@ public class LibraryClient{
 					if(roleOfUser.equals("Бібліотекар") && loginForm.getRole().getSelectedItem().equals("Бібліотекар")){
 						
 						loginForm.setVisible(false);
+						loginForm.dispose();
 						
 						librarianForm = new LibrarianPage();
 						
