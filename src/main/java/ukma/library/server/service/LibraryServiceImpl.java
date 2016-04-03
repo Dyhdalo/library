@@ -92,6 +92,6 @@ public class LibraryServiceImpl extends UnicastRemoteObject implements LibrarySe
 	// TODO: Add implementation
 	// must return Book or null
 	public Book getBookById(Integer id) throws RemoteException{
-		return null;
+		return bookDao.getBook(id);
 	};
 }
