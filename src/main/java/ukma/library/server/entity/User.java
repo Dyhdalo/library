@@ -14,7 +14,7 @@ public class User implements Serializable{
 
 	private String role;
 
-	private enum UserRole{
+	public enum UserRole{
 		USER ("Читач"),
 		LIBRARIAN("Бібліотекар");
 

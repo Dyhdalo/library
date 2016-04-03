@@ -72,7 +72,7 @@ public class JdbcUserDao implements UserDao {
 
     @Override
     public boolean addUser(User user) {
-        String sql = "INSERT INTO " + USER_TABLE_NAME + "(name, phone, password, role) " +
+        String sql = "INSERT INTO " + USER_TABLE_NAME + "(name, phone, password, user_role) " +
                 "VALUES (?, ?, ?, ?)";
         try {
             connection = createConnection();
@@ -81,6 +81,7 @@ public class JdbcUserDao implements UserDao {
             statement.setString(2, user.getPhone());
             statement.setString(3, user.getPassword());
             statement.setInt(4, user.getRoleId());
+
             statement .executeUpdate();
         } catch (SQLException e) {
             return false;
