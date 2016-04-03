@@ -17,8 +17,10 @@ import ukma.library.client.forms.LibrarianPage;
 import ukma.library.client.forms.LoginForm;
 import ukma.library.client.forms.ReaderSearchPage;
 import ukma.library.client.forms.tables.BooksTable;
+import ukma.library.client.forms.tables.QueueTable;
 import ukma.library.client.forms.tables.ReadersTable;
 import ukma.library.server.entity.Book;
+import ukma.library.server.entity.Queue;
 import ukma.library.server.entity.User;
 import ukma.library.server.service.LibraryService;
 
@@ -29,8 +31,9 @@ public class LibraryClient{
 	public static LibraryService library;
 	
 	private static ArrayList<Book> books;
-	
+
 	private static ArrayList<User> users;
+	private static ArrayList<Queue> queues;
 	
 	private static int idOfUser;
 	private static String roleOfUser;
@@ -80,9 +83,15 @@ public class LibraryClient{
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
-						
+						try {
+							queues = (ArrayList<Queue>) library.getActiveQueue();
+						} catch (RemoteException e1) {
+							e1.printStackTrace();
+						}
+
 						librarianForm.getAllBooksTable().setModel(new BooksTable(books));
 						librarianForm.getAllReadersTable().setModel(new ReadersTable(users));
+						librarianForm.getAllQueuesTable().setModel(new QueueTable(queues, books));
 					}else
 						if(roleOfUser.equals("Читач") && loginForm.getRole().getSelectedItem().equals("Читач")){
 							loginForm.setVisible(false);

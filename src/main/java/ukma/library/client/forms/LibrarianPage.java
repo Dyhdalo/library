@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -19,6 +21,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import ukma.library.client.LibraryClient;
+import ukma.library.client.forms.tables.BooksTable;
+import ukma.library.client.forms.tables.QueueTable;
+import ukma.library.server.entity.Book;
 
 public class LibrarianPage extends JFrame implements ActionListener{
 
@@ -214,7 +219,15 @@ public class LibrarianPage extends JFrame implements ActionListener{
 		}else if (e.getSource() == changeReader) {
 			System.out.println("changeReader");
 		}else if (e.getSource() == addReaderToQueue) {
-			System.out.println("addReaderToQueue");
+			AddReaderToQueue page = new AddReaderToQueue();
+			List<Book> books = null;
+			try {
+				books = LibraryClient.library.getAllToQueueBooks();
+			} catch (RemoteException e2) {
+				e2.printStackTrace();
+			}
+			page.showEventDemo();
+			page.getAllBooksTable().setModel(new BooksTable(books));
 		}else if (e.getSource() == addOrder) {
 			(new OrderTable()).showEventDemo();
 		}else if (e.getSource() == closeOrder) {

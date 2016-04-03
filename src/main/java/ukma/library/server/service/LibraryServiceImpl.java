@@ -74,4 +74,20 @@ public class LibraryServiceImpl extends UnicastRemoteObject implements LibrarySe
 		return searchDao.getQueueForBook(book);
 	}
 
+	// TODO: Add implementation
+	public String getUserNameById(int id) throws RemoteException{
+		return "user name";
+	};
+
+	// TODO: Add implementation
+	// must return all books which has 0 copies in the library
+	public List<Book> getAllToQueueBooks() throws RemoteException{
+		return bookDao.getAllBooks();
+	};
+
+	// TODO: Add implementation
+	// must return user id or null
+	public Integer getUserIdByLogin(String login) throws RemoteException{
+		return null;
+	}
 }

@@ -1,6 +1,7 @@
 package ukma.library.client.forms.tables;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -8,10 +9,10 @@ import ukma.library.server.entity.Book;
 
 public class BooksTable extends AbstractTableModel{
 
-	private ArrayList<Book> allBooks;
+	private List<Book> allBooks;
 	private String[] columnNames = {"id","Назва","Автор","Видавництво","Рік"};
 	
-	public BooksTable(ArrayList<Book> book) {
+	public BooksTable(List<Book> book) {
 		allBooks = book;
 	}
 	
