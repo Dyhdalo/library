@@ -93,6 +93,33 @@ public class JdbcOrderDao implements OrderDao {
         return true;
     }
 
+    @Override
+    public List<Order> getActiveOrdersByUser(int id) {
+        String getActive = "SELECT * FROM "+ Order_TABLE_NAME + "WHERE id_user = "+ id + " AND date_completing = null";
+        return selectOrderList(getActive);
+    }
+
+    @Override
+    public boolean closeOrder(int orderId) {
+        PreparedStatement preparedStatement = null;
+        boolean flag = true;
+        String closeOrder = "UPDATE "+ Order_TABLE_NAME + "SET order.date_completing = ? WHERE order.id_user = ?";
+        connection = createConnection();
+        try {
+            preparedStatement = connection.prepareStatement(closeOrder);
+            preparedStatement.setDate(1,new Date(System.currentTimeMillis()));
+            preparedStatement.setInt(2,orderId);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            flag = false;
+            e.printStackTrace();
+        }finally {
+            closeConnection();
+        }
+
+        return flag;
+    }
+
     private List<Order> selectOrderList(String sql) {
         ArrayList<Order> orders = new ArrayList<Order>();
         try {
