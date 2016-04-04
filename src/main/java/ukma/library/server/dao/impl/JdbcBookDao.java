@@ -88,20 +88,26 @@ public class JdbcBookDao implements BookDao {
 	}
 
 	public Book getBook(int id) {
-
-		Connection conn = createConnection();
+		String sql = "SELECT * FROM acsm_b775c39c99325aa.book WHERE id_book = "+id;
+		Connection conn = JdbcBookDao.createConnection();
 		PreparedStatement statement = null;
-		Book book = null;
+		ResultSet rs = null;
+		
+		ArrayList<Book> books = new ArrayList<Book>();
 
 		try {
-			statement = conn.prepareStatement(GET_BOOK_WITH_ID);
-			statement.setInt(1,id);
-			book = mapRow(statement.executeQuery());
+			statement = conn.prepareStatement(sql);
+			rs = statement.executeQuery();
+			while (rs.next()) {
+				books.add(mapRow(rs));
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+		JdbcBookDao.closeConnection(conn);
 
-		return book;
+		return books.get(0);
 	}
 
 	public Book getBook(String title) {
