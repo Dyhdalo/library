@@ -4,6 +4,7 @@ import ukma.library.client.LibraryClient;
 import ukma.library.server.entity.Copy;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -94,9 +95,11 @@ public class CopiesPage extends JFrame {
                 int isbn = Integer.parseInt(isbnField.getText());
                 Copy copy = new Copy(isbn, bookId);
                 try {
-                    LibraryClient.library.addCopy(copy);
-                } catch (RemoteException e1) {
-                }
+					LibraryClient.library.addCopy(copy);
+				} catch (RemoteException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
                 back();
             }
         }
