@@ -70,7 +70,7 @@ public class JdbcBookDao implements BookDao {
 	}
 
 	public void updateBook(int id, String title, String author, String edition, int year ) {
-		Connection conn = createConnection();
+		Connection conn = JdbcBookDao.createConnection();
 		PreparedStatement statement = null;
 
 		try {
@@ -84,7 +84,7 @@ public class JdbcBookDao implements BookDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		closeConnection(conn);
+		JdbcBookDao.closeConnection(conn);
 	}
 
 	public Book getBook(int id) {
