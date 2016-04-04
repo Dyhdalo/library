@@ -82,30 +82,29 @@ public class LibraryServiceImpl extends UnicastRemoteObject implements LibrarySe
 		return searchDao.getQueueForBook(book);
 	}
 
-	// TODO: Add implementation
+	@Override
 	public String getUserNameById(int id) throws RemoteException{
-		return "user name";
-	};
-
-	// TODO: Add implementation
-	// must return all books which has 0 copies in the library
-	public List<Book> getAllToQueueBooks() throws RemoteException{
-		return bookDao.getAllBooks();
-	};
-
-	// TODO: Add implementation
-	// must return user id or null
-	public Integer getUserIdByLogin(String login) throws RemoteException{
-		return null;
+		User user = userDao.getUserById(id);
+		return user==null? null: user.getName();
 	}
 
-	// TODO: Add implementation
+	@Override
+	// must return all books which has 0 copies in the library
+	public List<Book> getAllToQueueBooks() throws RemoteException{
+		return bookDao.getAllBooksWithoutCopies();
+	}
+
+	// must return user id or null
+	public Integer getUserIdByLogin(String login) throws RemoteException{
+		User user = userDao.getUserByName(login);
+		return user==null? null:user.getId();
+	}
+
 	// must return Book or null
 	public Book getBookById(Integer id) throws RemoteException{
 		return bookDao.getBook(id);
-	};
+	}
 
-	// TODO: Add implementation
 	public void updateBook(Book b) throws RemoteException{
 		bookDao.updateBook(b.getId(), b.getTitle(), b.getAuthor(), b.getEdition(), b.getYear());
 	}
@@ -115,9 +114,7 @@ public class LibraryServiceImpl extends UnicastRemoteObject implements LibrarySe
 		return userDao.getAllUsersDebtors();
 	}
 
-
-	// TODO: Add implementation
 	public void addCopy(Copy c) throws RemoteException{
-
-	};
+		searchDao.addCopy(c);
+	}
 }

@@ -87,6 +87,31 @@ public class JdbcBookDao implements BookDao {
 		JdbcBookDao.closeConnection(conn);
 	}
 
+	@Override
+	public List<Book> getAllBooksWithoutCopies() {
+		String sql = "SELECT * FROM "+BOOK_TABLE_NAME+" WHERE " + BOOK_TABLE_NAME + ".id_book NOT IN " +
+				"( SELECT DISTINCT "+COPY_TABLE_NAME+".id_book) FROM "+COPY_TABLE_NAME + ") ";
+
+		ArrayList<Book> books = new ArrayList<Book>();
+		Connection conn = JdbcBookDao.createConnection();
+
+		PreparedStatement statement = null;
+		ResultSet rs = null;
+
+		try {
+			statement = conn.prepareStatement(sql);
+			rs = statement.executeQuery();
+			while (rs.next()) {
+				books.add(mapRow(rs));
+			}
+		} catch (SQLException se) {
+			System.out.println("SQL Error: " + se);
+		}
+
+		JdbcBookDao.closeConnection(conn);
+		return books;
+	}
+
 	public Book getBook(int id) {
 		String sql = "SELECT * FROM acsm_b775c39c99325aa.book WHERE book.id_book = "+id;
 		Connection conn = JdbcBookDao.createConnection();
