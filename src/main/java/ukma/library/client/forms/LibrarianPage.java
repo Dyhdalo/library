@@ -42,8 +42,8 @@ public class LibrarianPage extends JFrame implements ActionListener{
 	JPanel panel4;
 	JTable allBooks;
 	JTable allReaders;
-	JTable allQueues;
-	JTable allOrders;
+	
+	QueueOfBook queueBook;
 
 	JButton addBook;
 	JButton addCopy;
@@ -52,9 +52,6 @@ public class LibrarianPage extends JFrame implements ActionListener{
 	JButton showOrdersOfReader;
 	JButton addReader;
 	JButton changeReader;
-	JButton addReaderToQueue;
-	JButton addOrder;
-	JButton closeOrder;
 	
 	private JTextField jtfFilterBooks = new JTextField();
 	private JTextField jtfFilterReaders = new JTextField();
@@ -195,38 +192,8 @@ public class LibrarianPage extends JFrame implements ActionListener{
 
 		panel2.add(newPanel2, BorderLayout.PAGE_END);
 
-		panel3 = new JPanel(new BorderLayout());
-		
-		allQueues();
-		
-		addReaderToQueue = new JButton("Додати читача до черги");
-		addReaderToQueue.addActionListener(this);
-
-		JPanel newPanel3 = new JPanel();
-		newPanel3.add(addReaderToQueue);
-
-		panel3.add(newPanel3, BorderLayout.PAGE_END);
-
-		panel4 = new JPanel(new BorderLayout());
-
-		allOrders();
-		
-		addOrder = new JButton("Додати замовлення");
-		addOrder.addActionListener(this);
-
-		closeOrder = new JButton("Закрити замовлення");
-		closeOrder.addActionListener(this);
-
-		JPanel newPanel4 = new JPanel();
-		newPanel4.add(addOrder);
-		newPanel4.add(closeOrder);
-
-		panel4.add(newPanel4, BorderLayout.PAGE_END);
-
 		tabby.addTab("Книги", panel1);
 		tabby.addTab("Читачі", panel2);
-		tabby.addTab("Черги на літературу", panel3);
-		tabby.addTab("Замовлення", panel4);
 		add(tabby);
 		
 		tabby.addChangeListener(new ChangeListener() {
@@ -235,8 +202,6 @@ public class LibrarianPage extends JFrame implements ActionListener{
 			public void stateChanged(ChangeEvent e) {
 				allBooks.clearSelection();
 				allReaders.clearSelection();
-				allQueues.clearSelection();
-				allOrders.clearSelection();
 				}
 			});
 		
@@ -251,30 +216,6 @@ public class LibrarianPage extends JFrame implements ActionListener{
 
 	public TableRowSorter<TableModel> getRowSorterReaders() {
 		return rowSorterReaders;
-	}
-
-	private void allOrders() {
-		allOrders = new JTable();
-		allOrders.setPreferredScrollableViewportSize(new Dimension(700,100));
-		allOrders.setSize(800, 300);
-		
-		JScrollPane allOrdersPane = new JScrollPane(allOrders);
-		allOrdersPane.setPreferredSize(new Dimension(700,100));
-		allOrdersPane.setSize(800, 300);
-
-		panel4.add(allOrdersPane, BorderLayout.CENTER);
-	}
-
-	private void allQueues() {
-		allQueues = new JTable();
-		allQueues.setPreferredScrollableViewportSize(new Dimension(700,100));
-		allQueues.setSize(800, 300);
-		
-		JScrollPane allQueuesPane = new JScrollPane(allQueues);
-		allQueuesPane.setPreferredSize(new Dimension(700,100));
-		allQueuesPane.setSize(800, 300);
-
-		panel3.add(allQueuesPane, BorderLayout.CENTER);
 	}
 
 	private void allReaders() {
@@ -309,12 +250,8 @@ public class LibrarianPage extends JFrame implements ActionListener{
 		return this.allReaders;
 	}
 	
-	public JTable getAllQueuesTable(){
-		return this.allQueues;
-	}
-	
-	public JTable getAllOrdersTable(){
-		return this.allOrders;
+	public QueueOfBook getQueueOfBook(){
+		return this.queueBook;
 	}
 
 	@Override
@@ -331,34 +268,23 @@ public class LibrarianPage extends JFrame implements ActionListener{
 		} else if (e.getSource() == changeBook) {
 			System.out.println("changeBook");
 		}else if (e.getSource() == showQueueOfBook) {
-			System.out.println("showQueueOfBook");
-		}
-		else if (e.getSource() == addReader) {
+			int[] rows = allBooks.getSelectedRows();
+			if (rows.length > 0){
+				queueBook = new QueueOfBook((Integer)allBooks.getValueAt(rows[0], 0), (String)allBooks.getValueAt(rows[0], 1));
+			}else{
+				JOptionPane.showMessageDialog(null, "Потрібно вибрати книгу!!!", "", JOptionPane.INFORMATION_MESSAGE);
+			}
+		}else if (e.getSource() == addReader) {
 			(new ReaderPage()).showAddReader();
 		}else if (e.getSource() == changeReader) {
-			System.out.println("changeReader");
+			int[] rows = allReaders.getSelectedRows();
+			if (rows.length > 0){
+				ReaderPage readerPage = new ReaderPage((Integer)allReaders.getValueAt(rows[0], 0));
+			}else{
+				JOptionPane.showMessageDialog(null, "Потрібно вибрати читача!!!", "", JOptionPane.INFORMATION_MESSAGE);
+			}
 		}else if (e.getSource() == showOrdersOfReader) {
 			System.out.println("showOrdersOfReader");
-		}else if (e.getSource() == addReaderToQueue) {
-			AddReaderToQueue page = new AddReaderToQueue();
-			List<Book> books = null;
-			try {
-				books = LibraryClient.library.getAllToQueueBooks();
-			} catch (RemoteException e2) {
-				e2.printStackTrace();
-			}
-			page.showEventDemo();
-			page.getAllBooksTable().setModel(new BooksTable(books));
-		}else if (e.getSource() == addOrder) {
-			OrderTable page = new OrderTable();
-			page.showEventDemo();
-			try {
-				page.getAllBooksTable().setModel(new BooksTable(LibraryClient.library.getAllBooks()));
-			} catch (RemoteException e1) {
-				e1.printStackTrace();
-			}
-		}else if (e.getSource() == closeOrder) {
-			System.out.println("closeOrder");
 		}
 	}
 	
