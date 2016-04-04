@@ -3,10 +3,12 @@ package ukma.library.client.forms;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 
 import javax.swing.*;
 
 import ukma.library.client.LibraryClient;
+import ukma.library.server.entity.User;
 
 public class ReaderPage extends JFrame {
     JPanel panel;
@@ -16,9 +18,9 @@ public class ReaderPage extends JFrame {
     JPasswordField passwordField;
     JComboBox role;
     JButton addButton;
+    JButton backButton;
 
-
-    final String[] roles = {"Бібліотекар", "Читач"};
+    final String[] roles = {"LIBRARIAN", "USER"};
 
     public ReaderPage() {
         this.setSize(350,300);
@@ -35,12 +37,17 @@ public class ReaderPage extends JFrame {
         passwordField = new JPasswordField(10);
         role = new JComboBox(roles);
         addButton = new JButton("OK");
+        backButton = new JButton("Повернутися назад");
+
+        addButton.addActionListener(new AddButtonClickListener());
+        backButton.addActionListener(new BackButtonClickListener());
+
     }
-    
+
     public ReaderPage(int userId){
-    	
+
     }
-    
+
     public static void main(String[] args){
         ReaderPage swingControlDemo = new ReaderPage();
         swingControlDemo.showAddReader();
@@ -58,6 +65,7 @@ public class ReaderPage extends JFrame {
         this.add(mainPanel);
         this.add(panel);
         panel.add(addButton, BorderLayout.PAGE_END);
+        panel.add(backButton);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setVisible(true);
     }
@@ -76,6 +84,33 @@ public class ReaderPage extends JFrame {
         return this.role;
     }
 
+    private void back(){
+        setVisible(false);
+        dispose();
+    }
 
 
+    private class AddButtonClickListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            User user = new User();
+            user.setName(nameField.getText());
+            user.setPhone(phoneField.getText());
+            user.setPassword(passwordField.getText());
+            System.out.println(role.getSelectedItem().toString());
+            user.setRole(role.getSelectedItem().toString());
+
+
+            try {
+                LibraryClient.library.addUser(user);
+            } catch (RemoteException e1) {
+                e1.printStackTrace();
+            }
+        }
+    }
+
+    private class BackButtonClickListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            back();
+        }
+    }
 }
