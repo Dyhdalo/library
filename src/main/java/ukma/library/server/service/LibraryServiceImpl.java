@@ -68,7 +68,7 @@ public class LibraryServiceImpl extends UnicastRemoteObject implements LibrarySe
 	}
 
 	@Override
-	public List<Queue> getQueueForBook(Book book) throws RemoteException {
+	public List<User> getQueueForBook(int book) throws RemoteException {
 		return searchDao.getQueueForBook(book);
 	}
 

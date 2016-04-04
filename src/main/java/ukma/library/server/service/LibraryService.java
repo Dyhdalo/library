@@ -30,7 +30,7 @@ public interface LibraryService extends Remote{
 
 	public List<Queue> getActiveQueue()throws RemoteException ;
 
-	public List<Queue> getQueueForBook(Book book)throws RemoteException ;
+	public List<User> getQueueForBook(int book)throws RemoteException ;
 
 	public String getUserNameById(int id) throws RemoteException;
 

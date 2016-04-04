@@ -35,10 +35,12 @@ public class ReaderPage extends JFrame {
         passwordField = new JPasswordField(10);
         role = new JComboBox(roles);
         addButton = new JButton("OK");
-
-
-
     }
+    
+    public ReaderPage(int userId){
+    	
+    }
+    
     public static void main(String[] args){
         ReaderPage swingControlDemo = new ReaderPage();
         swingControlDemo.showAddReader();

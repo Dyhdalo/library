@@ -90,12 +90,9 @@ public class LibraryClient{
 						
 						librarianForm = new LibrarianPage(books, users);
 
-						librarianForm.getAllQueuesTable().setModel(new QueueTable(queues, books));
 					}else
 						if(roleOfUser.equals("Читач") && loginForm.getRole().getSelectedItem().equals("Читач")){
 							loginForm.setVisible(false);
-							
-							readerForm = new ReaderSearchPage();
 							
 							try {
 								books = (ArrayList<Book>) library.getAllBooks();
@@ -104,7 +101,7 @@ public class LibraryClient{
 								e1.printStackTrace();
 							}
 							
-							readerForm.getAllBooksTable().setModel(new BooksTable(books));
+							readerForm = new ReaderSearchPage(books);
 						}
 				
 			}
