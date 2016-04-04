@@ -52,6 +52,7 @@ public class LibrarianPage extends JFrame implements ActionListener{
 	JSpinner yearSpinner;
 	
 	QueueOfBook queueBook;
+	OrdersOfUser orderUser;
 
 	JButton addBook;
 	JButton addCopy;
@@ -308,6 +309,10 @@ public class LibrarianPage extends JFrame implements ActionListener{
 	public QueueOfBook getQueueOfBook(){
 		return this.queueBook;
 	}
+	
+	public OrdersOfUser getOrdersOfUser(){
+		return this.orderUser;
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -339,7 +344,12 @@ public class LibrarianPage extends JFrame implements ActionListener{
 				JOptionPane.showMessageDialog(null, "Потрібно вибрати читача!!!", "", JOptionPane.INFORMATION_MESSAGE);
 			}
 		}else if (e.getSource() == showOrdersOfReader) {
-			System.out.println("showOrdersOfReader");
+			int[] rows = allReaders.getSelectedRows();
+			if(rows.length > 0){
+				orderUser = new OrdersOfUser((Integer)allReaders.getValueAt(rows[0], 0), (String)allReaders.getValueAt(rows[0], 1));
+			}else{
+				JOptionPane.showMessageDialog(null, "Потрібно вибрати читача!!!", "", JOptionPane.INFORMATION_MESSAGE);
+			}
 		}else if (e.getSource() == showDebtors) {
 			System.out.println("showDebtors");
 		}else if (e.getSource() == showAccountingBooks) {

@@ -17,6 +17,8 @@ public interface LibraryService extends Remote{
 	public List<Book> getAllBooks() throws RemoteException;
 
 	public boolean addBook(Book book)throws RemoteException ;
+	
+	public List<Book> getActiveBooksByUser(int userId)throws RemoteException;
 
 	public boolean addUser(User user)throws RemoteException ;
 
