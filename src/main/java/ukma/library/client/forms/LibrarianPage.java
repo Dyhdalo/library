@@ -329,10 +329,9 @@ public class LibrarianPage extends JFrame implements ActionListener{
 			int[] rows = allBooks.getSelectedRows();
 			if (rows.length > 0){
 				int bookId = (Integer)allBooks.getValueAt(rows[0], 0);
-				System.out.println(bookId);
 				try {
 					Book b = LibraryClient.library.getBookById(bookId);
-					new EditBookTable(b).showEventDemo();
+					(new EditBookTable(b)).showEventDemo();
 				} catch (RemoteException e1) {
 					e1.printStackTrace();
 				}

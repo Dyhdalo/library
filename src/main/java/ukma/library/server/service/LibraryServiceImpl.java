@@ -106,7 +106,7 @@ public class LibraryServiceImpl extends UnicastRemoteObject implements LibrarySe
 	};
 
 	// TODO: Add implementation
-	public boolean updateBook(Book b) throws RemoteException{
-		return true;
+	public void updateBook(Book b) throws RemoteException{
+		bookDao.updateBook(b.getId(), b.getTitle(), b.getAuthor(), b.getEdition(), b.getYear());
 	};
 }

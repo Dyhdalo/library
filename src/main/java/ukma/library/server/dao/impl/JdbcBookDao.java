@@ -70,7 +70,7 @@ public class JdbcBookDao implements BookDao {
 	}
 
 	public void updateBook(int id, String title, String author, String edition, int year ) {
-		Connection conn = createConnection();
+		Connection conn = JdbcBookDao.createConnection();
 		PreparedStatement statement = null;
 
 		try {
@@ -84,24 +84,30 @@ public class JdbcBookDao implements BookDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		closeConnection(conn);
+		JdbcBookDao.closeConnection(conn);
 	}
 
 	public Book getBook(int id) {
-
-		Connection conn = createConnection();
+		String sql = "SELECT * FROM acsm_b775c39c99325aa.book WHERE id_book = "+id;
+		Connection conn = JdbcBookDao.createConnection();
 		PreparedStatement statement = null;
-		Book book = null;
+		ResultSet rs = null;
+		
+		ArrayList<Book> books = new ArrayList<Book>();
 
 		try {
-			statement = conn.prepareStatement(GET_BOOK_WITH_ID);
-			statement.setInt(1,id);
-			book = mapRow(statement.executeQuery());
+			statement = conn.prepareStatement(sql);
+			rs = statement.executeQuery();
+			while (rs.next()) {
+				books.add(mapRow(rs));
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+		JdbcBookDao.closeConnection(conn);
 
-		return book;
+		return books.get(0);
 	}
 
 	public Book getBook(String title) {
@@ -121,7 +127,7 @@ public class JdbcBookDao implements BookDao {
 	}
 	
 	public List<Book> getActiveBooksByUser(int userId){
-		String sql = "SELECT * FROM "+Order_TABLE_NAME+"INNER JOIN"+COPY_TABLE_NAME+"on Order.id_instance=Instance.id_instance INNER JOIN"+BOOK_TABLE_NAME+"on Book.id_book=Instance.id_book WHERE Order.id_user = "+userId;
+		String sql = "SELECT * FROM "+Order_TABLE_NAME+"INNER JOIN"+COPY_TABLE_NAME+"on Order.id_instance=Instance.id_inst INNER JOIN"+BOOK_TABLE_NAME+"on Book.id_book=Instance.id_book WHERE Order.id_user = "+userId;
 		
 		ArrayList<Book> books = new ArrayList<Book>();
 		Connection conn = JdbcBookDao.createConnection();
