@@ -12,6 +12,8 @@ public interface BookDao {
 	public Book getBook(int id);
 
 	public Book getBook(String title);
+	
+	public List<Book> getActiveBooksByUser(int userId);
 
 	public List<Book> getAllBooks();
 
