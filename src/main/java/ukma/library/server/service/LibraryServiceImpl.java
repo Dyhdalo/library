@@ -115,5 +115,9 @@ public class LibraryServiceImpl extends UnicastRemoteObject implements LibrarySe
 		return userDao.getAllUsersDebtors();
 	}
 
-	;
+
+	// TODO: Add implementation
+	public void addCopy(Copy c) throws RemoteException{
+
+	};
 }

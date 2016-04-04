@@ -48,4 +48,5 @@ public interface LibraryService extends Remote{
 
 	public List<User> getAllUsersDebtors() throws RemoteException;
 
+	public void addCopy(Copy c) throws RemoteException;
 }

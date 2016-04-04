@@ -88,7 +88,7 @@ public class JdbcBookDao implements BookDao {
 	}
 
 	public Book getBook(int id) {
-		String sql = "SELECT * FROM acsm_b775c39c99325aa.book WHERE id_book = "+id;
+		String sql = "SELECT * FROM acsm_b775c39c99325aa.book WHERE book.id_book = "+id;
 		Connection conn = JdbcBookDao.createConnection();
 		PreparedStatement statement = null;
 		ResultSet rs = null;

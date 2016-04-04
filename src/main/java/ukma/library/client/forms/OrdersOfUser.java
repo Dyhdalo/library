@@ -93,6 +93,13 @@ public class OrdersOfUser extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == addOrder){
 			System.out.println("addOrder");
+			OrderTable orderTable = new OrderTable(this.userId);
+			orderTable.showEventDemo();
+			try {
+				orderTable.getAllBooksTable().setModel(new BooksTable(LibraryClient.library.getAllBooks()));
+			} catch (RemoteException e1) {
+				e1.printStackTrace();
+			}
 		}else if (e.getSource() == completeOrder){
 			System.out.println("completeOrder");
 		}

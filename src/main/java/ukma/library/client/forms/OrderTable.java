@@ -29,8 +29,10 @@ public class OrderTable extends JFrame{
     private JPanel mainPanel;
     private JPanel bottomPanel;
     private List<Book> books;
-    public OrderTable() {
+    private int userId;
+    public OrderTable(int userId) {
         super("Зарезервувати примірник");
+        this.userId = userId;
         try {
             this.books = LibraryClient.library.getAllBooks();
         } catch (Exception e) {
@@ -41,28 +43,29 @@ public class OrderTable extends JFrame{
     }
 
     public static void main(String[] args){
-        OrderTable swingControlDemo = new OrderTable();
+        OrderTable swingControlDemo = new OrderTable(0);
         swingControlDemo.showEventDemo();
         swingControlDemo.getAllBooksTable().setModel(new BooksTable(new ArrayList<Book>()));
     }
 
     private void prepareGUI(){
-        this.setSize(800, 300);
+        this.setSize(700, 200);
         this.setLayout(new BorderLayout());
         headerLabel = new JLabel("Зарезервувати примірник", JLabel.CENTER );
         errorLabel = new JLabel("", JLabel.CENTER );
         errorLabel.setVisible(false);
 
         mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayout(5, 1));
+        mainPanel.setLayout(new FlowLayout());
 
         /*topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 */
 
         bottomPanel = new JPanel();
-        bottomPanel.setLayout(new GridLayout(2, 2));
-
+        bottomPanel.setLayout(new GridLayout(1, 2));
+        bottomPanel.setSize(new Dimension(700, 50));
+        bottomPanel.setMaximumSize(new Dimension(700, 50));
         //controlPanel = new JPanel();
         //controlPanel.setLayout(new FlowLayout());
 
@@ -90,8 +93,8 @@ public class OrderTable extends JFrame{
     }
 
     void showEventDemo(){
-        userIdLabel = new JLabel("Логін користувача: ", JLabel.RIGHT );
-        userIdField = new JTextField(70);
+        //userIdLabel = new JLabel("Логін користувача: ", JLabel.RIGHT );
+        //userIdField = new JTextField(70);
 
 
         JButton addButton = new JButton("Зарезервувати");
@@ -100,8 +103,8 @@ public class OrderTable extends JFrame{
         addButton.addActionListener(new AddButtonClickListener());
         backButton.addActionListener(new BackButtonClickListener());
 
-        bottomPanel.add(userIdLabel);
-        bottomPanel.add(userIdField);
+        //bottomPanel.add(userIdLabel);
+        //bottomPanel.add(userIdField);
 
 
         bottomPanel.add(addButton);
@@ -119,15 +122,7 @@ public class OrderTable extends JFrame{
     private class AddButtonClickListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             errorLabel.setVisible(false);
-            // TODO: Validation and reservation
-            String userLogin = userIdField.getText();
-            Integer userId = null;
-            try {
-                 userId = LibraryClient.library.getUserIdByLogin(userLogin);
-            } catch (RemoteException e1) {
-                e1.printStackTrace();
-            }
-            if(userId == null) {
+            if(userId == 0) {
                 JOptionPane.showMessageDialog(null, "Не існує такого користувача в системі", "", JOptionPane.INFORMATION_MESSAGE);
                 return;
             }
@@ -142,9 +137,21 @@ public class OrderTable extends JFrame{
 
             try {
                 Book b = LibraryClient.library.getBookById(bookId);
-                Copy copy = LibraryClient.library.getFreeCopy(b);
-                order.setCopyId(copy.getIsbn());
-                LibraryClient.library.addOrder(order);
+                System.out.println(bookId);
+                System.out.println(b);
+                if(b != null) {
+                    Copy copy = LibraryClient.library.getFreeCopy(b);
+                    if(copy != null) {
+                        order.setCopyId(copy.getIsbn());
+                        LibraryClient.library.addOrder(order);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Не має вільних примірників. Станьте в чергу або спробуйте пізніше.", "", JOptionPane.INFORMATION_MESSAGE);
+                        return;
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Внутрішня помилка. Повторіть спробу пізніше.", "", JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
             } catch (RemoteException e1) {
                 e1.printStackTrace();
                 JOptionPane.showMessageDialog(null, "Внутрішня помилка. Повторіть спробу пізніше.", "", JOptionPane.INFORMATION_MESSAGE);
