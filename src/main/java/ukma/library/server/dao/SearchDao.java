@@ -11,7 +11,7 @@ public interface SearchDao {
 
     public boolean addQueue(Queue queue);
 
-    public boolean deleteOueue(Queue queue);
+    public boolean deleteOueue(int id_book, int id_user);
 
     public Copy getFreeCopy(int id);
 

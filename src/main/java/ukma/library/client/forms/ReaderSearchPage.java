@@ -90,7 +90,7 @@ public class ReaderSearchPage extends JFrame implements ActionListener{
 		panel1.add(newPanel, BorderLayout.PAGE_END);
 		
 		add(panel1);
-		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		pack();
 		setVisible(true);
 	}

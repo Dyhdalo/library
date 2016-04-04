@@ -23,6 +23,8 @@ public interface LibraryService extends Remote{
 	public boolean addOrder(Order order)throws RemoteException ;
 
 	public boolean addQueue(Queue queue)throws RemoteException ;
+	
+	public boolean deleteQueue(int id_book, int id_user)throws RemoteException ;
 
 	public User getUserByName(String name) throws RemoteException;
 

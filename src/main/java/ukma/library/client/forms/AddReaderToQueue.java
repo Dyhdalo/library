@@ -5,6 +5,10 @@ import ukma.library.client.forms.tables.ReadersTable;
 import ukma.library.server.entity.*;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -21,6 +25,9 @@ public class AddReaderToQueue extends JFrame{
     
     public int book_id;
     
+    private JTextField jtfFilterReaders = new JTextField();
+	private TableRowSorter<TableModel> rowSorterReaders;
+    
     public AddReaderToQueue(int book_id) {
         super("Зарезервувати примірник");
         
@@ -35,12 +42,11 @@ public class AddReaderToQueue extends JFrame{
     }
 
     private void prepareGUI(){
-        this.setSize(800, 300);
+    	setSize(800, 300);
         mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setLayout(new GridLayout(3, 1));
 
         allReaders();
-        
+          
         ArrayList<User> users = null;
 		try {
 			users = (ArrayList<User>) LibraryClient.library.getAllUsers();
@@ -50,7 +56,42 @@ public class AddReaderToQueue extends JFrame{
 		}
         
         allReaders.setModel(new ReadersTable(users));
+        
+        rowSorterReaders = new TableRowSorter<>(allReaders.getModel());
+		
+		allReaders.setRowSorter(rowSorterReaders);
+		
+		jtfFilterReaders.getDocument().addDocumentListener(new DocumentListener(){
 
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                String text = jtfFilterReaders.getText();
+
+                if (text.trim().length() == 0) {
+                	rowSorterReaders.setRowFilter(null);
+                } else {
+                	rowSorterReaders.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                String text = jtfFilterReaders.getText();
+
+                if (text.trim().length() == 0) {
+                	rowSorterReaders.setRowFilter(null);
+                } else {
+                	rowSorterReaders.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                }
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+
+        });
+		
         user();
 
         this.add(mainPanel);
@@ -59,15 +100,20 @@ public class AddReaderToQueue extends JFrame{
     }
     
     private void user(){
-        JPanel bodyPanel = new JPanel();
+        JPanel bodyPanel = new JPanel(new BorderLayout());
 
         JButton addButton = new JButton("Зарезервувати");
         JButton backButton = new JButton("Повернутися назад");
-
+        
         addButton.addActionListener(new AddButtonClickListener());
         backButton.addActionListener(new BackButtonClickListener());
-        bodyPanel.add(addButton);
-        bodyPanel.add(backButton);
+        bodyPanel.add(addButton, BorderLayout.LINE_START);
+        bodyPanel.add(backButton, BorderLayout.LINE_END);
+        
+        JPanel SearchPanel2 = new JPanel(new BorderLayout());
+		SearchPanel2.add(new JLabel("Пошук: "), BorderLayout.WEST);
+		SearchPanel2.add(jtfFilterReaders, BorderLayout.CENTER);
+		bodyPanel.add(SearchPanel2, BorderLayout.AFTER_LAST_LINE);
 
         mainPanel.add(bodyPanel, BorderLayout.PAGE_END);
     }

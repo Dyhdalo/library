@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -14,11 +15,14 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -43,6 +47,10 @@ public class LibrarianPage extends JFrame implements ActionListener{
 	JTable allBooks;
 	JTable allReaders;
 	
+	JTextArea debtors;
+	JTextArea accountingBooks;
+	JSpinner yearSpinner;
+	
 	QueueOfBook queueBook;
 
 	JButton addBook;
@@ -52,6 +60,9 @@ public class LibrarianPage extends JFrame implements ActionListener{
 	JButton showOrdersOfReader;
 	JButton addReader;
 	JButton changeReader;
+	JButton showDebtors;
+	JButton showAccountingBooks;
+	JButton showRankingOfBooks;
 	
 	private JTextField jtfFilterBooks = new JTextField();
 	private JTextField jtfFilterReaders = new JTextField();
@@ -112,7 +123,7 @@ public class LibrarianPage extends JFrame implements ActionListener{
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                throw new UnsupportedOperationException("Not supported yet.");
             }
 
         });
@@ -175,7 +186,7 @@ public class LibrarianPage extends JFrame implements ActionListener{
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                throw new UnsupportedOperationException("Not supported yet.");
             }
 
         });
@@ -191,9 +202,51 @@ public class LibrarianPage extends JFrame implements ActionListener{
 		newPanel2.add(SearchPanel2, BorderLayout.AFTER_LAST_LINE);
 
 		panel2.add(newPanel2, BorderLayout.PAGE_END);
+		
+		panel3 = new JPanel(new BorderLayout());
+		
+		debtors = new JTextArea("");
+		panel3.add(debtors, BorderLayout.CENTER);
+		
+		showDebtors = new JButton("Боржники");
+		showDebtors.addActionListener(this);
+		
+		Calendar calendar = Calendar.getInstance();
+        int currentYear = calendar.get(Calendar.YEAR);
+        SpinnerModel yearModel = new SpinnerNumberModel(currentYear,
+                currentYear - 600,
+                currentYear,
+                1);
+        yearSpinner = new JSpinner(yearModel);
+		
+		JPanel newPanel3 = new JPanel(new BorderLayout());
+		newPanel3.add(new JLabel("Рік: "), BorderLayout.WEST);
+		newPanel3.add(yearSpinner, BorderLayout.CENTER);
+		newPanel3.add(showDebtors, BorderLayout.EAST);
+		
+		panel3.add(newPanel3, BorderLayout.PAGE_END);
+		
+		panel4 = new JPanel(new BorderLayout());
+		
+		accountingBooks = new JTextArea("");
+		panel4.add(accountingBooks, BorderLayout.CENTER);
+		
+		showAccountingBooks = new JButton("Облік літератури");
+		showAccountingBooks.addActionListener(this);
+		
+		showRankingOfBooks = new JButton("Рейтинг видань");
+		showRankingOfBooks.addActionListener(this);
+		
+		JPanel newPanel4 = new JPanel();
+		newPanel4.add(showAccountingBooks);
+		newPanel4.add(showRankingOfBooks);
+		
+		panel4.add(newPanel4, BorderLayout.PAGE_END);
 
 		tabby.addTab("Книги", panel1);
 		tabby.addTab("Читачі", panel2);
+		tabby.addTab("Облік літератури", panel3);
+		tabby.addTab("Боржники", panel4);
 		add(tabby);
 		
 		tabby.addChangeListener(new ChangeListener() {
@@ -202,10 +255,12 @@ public class LibrarianPage extends JFrame implements ActionListener{
 			public void stateChanged(ChangeEvent e) {
 				allBooks.clearSelection();
 				allReaders.clearSelection();
+				debtors.setText("");
+				accountingBooks.setText("");
 				}
 			});
 		
-		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		pack();
 		setVisible(true);
 	}
@@ -257,7 +312,7 @@ public class LibrarianPage extends JFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == addBook) {
-			(new BookTable(this)).showEventDemo();
+			(new BookTable()).showEventDemo();
 		}else if (e.getSource() == addCopy) {
 			int[] rows = allBooks.getSelectedRows();
 			if (rows.length > 0){
@@ -285,6 +340,12 @@ public class LibrarianPage extends JFrame implements ActionListener{
 			}
 		}else if (e.getSource() == showOrdersOfReader) {
 			System.out.println("showOrdersOfReader");
+		}else if (e.getSource() == showDebtors) {
+			System.out.println("showDebtors");
+		}else if (e.getSource() == showAccountingBooks) {
+			System.out.println("showAccountingBooks");
+		}else if (e.getSource() == showRankingOfBooks) {
+			System.out.println("showRankingOfBooks");
 		}
 	}
 	

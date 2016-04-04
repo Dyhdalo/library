@@ -37,10 +37,9 @@ public class BookTable extends JFrame{
 
     private JPanel controlPanel;
     private JPanel mainPanel;
-    private LibrarianPage librarianForm;
-    public BookTable(LibrarianPage librarian){
+    
+    public BookTable(){
         super("Add book");
-        this.librarianForm = librarian;
         prepareGUI();
     }
 
@@ -113,6 +112,7 @@ public class BookTable extends JFrame{
         controlPanel.add(addButton);
         controlPanel.add(backButton);
 
+        this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         this.setVisible(true);
     }
 
@@ -155,7 +155,8 @@ public class BookTable extends JFrame{
             try {
                 // Reinitialization of book list
                 ArrayList<Book> books = (ArrayList<Book>) LibraryClient.library.getAllBooks();
-                librarianForm.getAllBooksTable().setModel(new BooksTable(books));
+                LibraryClient.librarianForm.getAllBooksTable().setModel(new BooksTable(books));
+                LibraryClient.librarianForm.getRowSorterBooks().setModel(LibraryClient.librarianForm.getAllBooksTable().getModel());
             } catch (RemoteException e1) {
                 e1.printStackTrace();
             }

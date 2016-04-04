@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -92,7 +93,23 @@ public class QueueOfBook extends JFrame implements ActionListener{
 		if (e.getSource() == addToQueue) {
 			AddReaderToQueue addQueue = new AddReaderToQueue(bookId);
 		}else if (e.getSource() == deleteFromQueue){
-			System.out.println("deleteFromQueue");
+			int[] rows = readersInQueue.getSelectedRows();
+			if (rows.length > 0){
+				try {
+					LibraryClient.library.deleteQueue(bookId, (Integer)readersInQueue.getValueAt(rows[0], 0));
+				} catch (RemoteException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				try {
+					LibraryClient.librarianForm.getQueueOfBook().getReadersInQueueTable().setModel(new ReadersTable((ArrayList<User>) LibraryClient.library.getQueueForBook(bookId)));
+				} catch (RemoteException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}else{
+				JOptionPane.showMessageDialog(null, "Потрібно вибрати читача!!!", "", JOptionPane.INFORMATION_MESSAGE);
+			}
 		}
 	}
 	

@@ -51,6 +51,11 @@ public class LibraryServiceImpl extends UnicastRemoteObject implements LibrarySe
 	public boolean addQueue(Queue queue) throws RemoteException {
 		return searchDao.addQueue(queue);
 	}
+	
+	@Override
+	public boolean deleteQueue(int id_book, int id_user)throws RemoteException{
+		return searchDao.deleteOueue(id_book, id_user);
+	}
 
 	@Override
 	public User getUserByName(String name) throws RemoteException {

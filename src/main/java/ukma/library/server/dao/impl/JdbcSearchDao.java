@@ -62,10 +62,11 @@ public class JdbcSearchDao implements SearchDao {
     }
 
     @Override
-    public boolean deleteOueue(Queue queue) {
-        String sql = "DELETE FROM " + QUEUE_TABLE_NAME + " WHERE Queue.id_queue = " + queue.getId();
+    public boolean deleteOueue(int id_book, int id_user) {
+        String sql = "DELETE FROM " + QUEUE_TABLE_NAME + " WHERE Queue.id_book = " + id_book+" AND Queue.id_user = "+id_user;
         try {
             connection = createConnection();
+            statement = connection.prepareStatement(sql);
             statement.executeUpdate(sql);
         } catch (SQLException e) {
             e.printStackTrace();
