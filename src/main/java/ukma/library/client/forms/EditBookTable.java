@@ -2,23 +2,17 @@ package ukma.library.client.forms;
 
 import ukma.library.client.LibraryClient;
 import ukma.library.client.forms.tables.BooksTable;
-import ukma.library.client.forms.tables.ReadersTable;
 import ukma.library.server.entity.Book;
-import ukma.library.server.entity.User;
-import ukma.library.server.service.LibraryService;
 
+import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.rmi.NotBoundException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import javax.swing.*;
-
-public class BookTable extends JFrame{
+public class EditBookTable extends JFrame{
     private JLabel headerLabel;
     private JLabel errorLabel;
 
@@ -37,9 +31,10 @@ public class BookTable extends JFrame{
 
     private JPanel controlPanel;
     private JPanel mainPanel;
-    
-    public BookTable(){
-        super("Add book");
+    private Book book;
+    public EditBookTable(Book b){
+        super("Edit book");
+        this.book = b;
         prepareGUI();
     }
 
@@ -47,7 +42,7 @@ public class BookTable extends JFrame{
         this.setSize(400, 500);
         this.setLayout(new GridLayout(3, 1));
 
-        headerLabel = new JLabel("Додати нову книгу", JLabel.CENTER );
+        headerLabel = new JLabel("Редагувати книгу", JLabel.CENTER );
         errorLabel = new JLabel("", JLabel.CENTER );
         errorLabel.setVisible(false);
 
@@ -83,7 +78,7 @@ public class BookTable extends JFrame{
 
         Calendar calendar = Calendar.getInstance();
         int currentYear = calendar.get(Calendar.YEAR);
-        SpinnerModel yearModel = new SpinnerNumberModel(currentYear, //initial value
+        SpinnerModel yearModel = new SpinnerNumberModel(this.book.getYear(), //initial value
                 currentYear - 600, //min
                 currentYear, //max
                 1);                //step
@@ -97,6 +92,12 @@ public class BookTable extends JFrame{
 
         addButton.addActionListener(new AddButtonClickListener());
         backButton.addActionListener(new BackButtonClickListener());
+
+        titleField.setText(this.book.getTitle());
+        authorField.setText(this.book.getAuthor());
+        editionField.setText(this.book.getEdition());
+        authorField.setText(this.book.getAuthor());
+        keyWordsField.setText(this.book.getKeyWords());
 
         mainPanel.add(titleLabel);
         mainPanel.add(titleField);
@@ -138,17 +139,17 @@ public class BookTable extends JFrame{
             if(!validateTextField(editionField.getText(), 1, "Довжина видання має бути не порожньою")) return;
             if(!validateTextField(keyWordsField.getText(), 20, "Довжина ключових слів має бути більшою, ніж 20 символів")) return;
 
-            Book b = new Book();
-            b.setTitle(titleField.getText());
-            b.setAuthor(authorField.getText());
-            b.setEdition(editionField.getText());
-            b.setYear(Integer.parseInt(yearSpinner.getValue().toString()));
-            b.setKeyWords(keyWordsField.getText());
+
+            book.setTitle(titleField.getText());
+            book.setAuthor(authorField.getText());
+            book.setEdition(editionField.getText());
+            book.setYear(Integer.parseInt(yearSpinner.getValue().toString()));
+            book.setKeyWords(keyWordsField.getText());
 
 
             try {
                 // Adding new book
-                LibraryClient.library.addBook(b);
+                LibraryClient.library.updateBook(book);
             } catch (RemoteException e1) {
                 e1.printStackTrace();
             }

@@ -1,6 +1,7 @@
 package ukma.library.server.dao.impl;
 
 import org.springframework.jdbc.core.RowMapper;
+
 import ukma.library.server.dao.SearchDao;
 import ukma.library.server.entity.*;
 import ukma.library.server.service.LibraryService;
@@ -17,6 +18,8 @@ public class JdbcSearchDao implements SearchDao {
 
     private static final String QUEUE_TABLE_NAME = " acsm_b775c39c99325aa.queue ";
     private static final String COPY_TABLE_NAME = " acsm_b775c39c99325aa.queue ";
+    private static final String USER_TABLE_NAME = " acsm_b775c39c99325aa.User ";
+    private static final String USER_ROLE_TABLE_NAME = " acsm_b775c39c99325aa.User_Role ";
 
     public JdbcSearchDao() {
     }
@@ -59,10 +62,11 @@ public class JdbcSearchDao implements SearchDao {
     }
 
     @Override
-    public boolean deleteOueue(Queue queue) {
-        String sql = "DELETE FROM " + QUEUE_TABLE_NAME + " WHERE Queue.id_queue = " + queue.getId();
+    public boolean deleteOueue(int id_book, int id_user) {
+        String sql = "DELETE FROM " + QUEUE_TABLE_NAME + " WHERE Queue.id_book = " + id_book+" AND Queue.id_user = "+id_user;
         try {
             connection = createConnection();
+            statement = connection.prepareStatement(sql);
             statement.executeUpdate(sql);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -85,9 +89,9 @@ public class JdbcSearchDao implements SearchDao {
     }
 
     @Override
-    public List<Queue> getQueueForBook(Book book) {
-        String sql = "SELECT * FROM" + QUEUE_TABLE_NAME + "WHERE Queue.id_book = " + book.getId();
-        return selectQueueList(sql);
+    public List<User> getQueueForBook(int book) {
+        String sql = "SELECT * FROM" + QUEUE_TABLE_NAME + "INNER JOIN"+USER_TABLE_NAME+"on User.id_user=Queue.id_user INNER JOIN"+USER_ROLE_TABLE_NAME+"on User.user_role=User_Role.id_role WHERE Queue.id_book = " + book;
+        return selectUserList(sql);
     }
 
     private List<Queue> selectQueueList(String sql) {
@@ -120,4 +124,37 @@ public class JdbcSearchDao implements SearchDao {
             return queue;
         }
     };
+    
+    private List<User> selectUserList(String sql) {
+        ArrayList<User> users = new ArrayList<User>();
+        try {
+            connection = createConnection();
+            statement = connection.prepareStatement(sql);
+            resultSet = statement.executeQuery();
+            int row = 0;
+            while (resultSet.next()) {
+                users.add(userMapper.mapRow(resultSet, row++));
+            }
+
+        } catch (SQLException e) {
+            System.out.println("SQL Error: " + e);
+        } finally {
+            closeConnection();
+        }
+        return users;
+    }
+    
+    private static final RowMapper<User> userMapper = new RowMapper<User>() {
+
+        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+            User user = new User();
+            user.setId(resultSet.getInt("id_user"));
+            user.setName(resultSet.getString("name"));
+            user.setPhone(resultSet.getString("phone"));
+            user.setPassword(resultSet.getString("password"));
+            user.setRole(resultSet.getString("role"));
+            return user;
+        }
+    };
+    
 }

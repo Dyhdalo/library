@@ -23,7 +23,10 @@ public class JdbcBookDao implements BookDao {
 
 	private final String UPDATE_BOOK = "UPDATE acsm_b775c39c99325aa.book SET book.title = ?, book.author = ?, book.edition = ?, book.year = ? WHERE  book.id_book = ?";
 
-
+	private static final String Order_TABLE_NAME = " acsm_b775c39c99325aa.Order ";
+	private static final String COPY_TABLE_NAME = " acsm_b775c39c99325aa.instance ";
+	private static final String BOOK_TABLE_NAME = " acsm_b775c39c99325aa.book ";
+	
 	private static Connection createConnection(){
 		Connection conn = null;
 		try {
@@ -43,7 +46,8 @@ public class JdbcBookDao implements BookDao {
 	}
 
 
-	public boolean addBook(String title, String author, int date, String edition) {
+	//TODO: add impl for keyWords
+	public boolean addBook(String title, String author, int date, String edition, String keyWords) {
 		boolean flag = true;
 
 		Connection conn = createConnection();
@@ -114,6 +118,30 @@ public class JdbcBookDao implements BookDao {
 		}
 
 		return book;
+	}
+	
+	public List<Book> getActiveBooksByUser(int userId){
+		String sql = "SELECT * FROM "+Order_TABLE_NAME+"INNER JOIN"+COPY_TABLE_NAME+"on Order.id_instance=Instance.id_instance INNER JOIN"+BOOK_TABLE_NAME+"on Book.id_book=Instance.id_book WHERE Order.id_user = "+userId;
+		
+		ArrayList<Book> books = new ArrayList<Book>();
+		Connection conn = JdbcBookDao.createConnection();
+
+		PreparedStatement statement = null;
+		ResultSet rs = null;
+
+			try {
+				statement = conn.prepareStatement(sql);
+				rs = statement.executeQuery();
+				while (rs.next()) {
+					books.add(mapRow(rs));
+				}
+			} catch (SQLException se) {
+				System.out.println("SQL Error: " + se);
+			}
+
+		JdbcBookDao.closeConnection(conn);
+
+		return books;
 	}
 
 	public List<Book> getAllBooks() {

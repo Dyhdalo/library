@@ -17,12 +17,16 @@ public interface LibraryService extends Remote{
 	public List<Book> getAllBooks() throws RemoteException;
 
 	public boolean addBook(Book book)throws RemoteException ;
+	
+	public List<Book> getActiveBooksByUser(int userId)throws RemoteException;
 
 	public boolean addUser(User user)throws RemoteException ;
 
 	public boolean addOrder(Order order)throws RemoteException ;
 
 	public boolean addQueue(Queue queue)throws RemoteException ;
+	
+	public boolean deleteQueue(int id_book, int id_user)throws RemoteException ;
 
 	public User getUserByName(String name) throws RemoteException;
 
@@ -30,7 +34,7 @@ public interface LibraryService extends Remote{
 
 	public List<Queue> getActiveQueue()throws RemoteException ;
 
-	public List<Queue> getQueueForBook(Book book)throws RemoteException ;
+	public List<User> getQueueForBook(int book)throws RemoteException ;
 
 	public String getUserNameById(int id) throws RemoteException;
 
@@ -39,4 +43,6 @@ public interface LibraryService extends Remote{
 	public Integer getUserIdByLogin(String login) throws RemoteException;
 
 	public Book getBookById(Integer id) throws RemoteException;
+
+	public boolean updateBook(Book b) throws RemoteException;
 }
