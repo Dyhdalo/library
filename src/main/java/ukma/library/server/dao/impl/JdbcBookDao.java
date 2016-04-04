@@ -43,7 +43,8 @@ public class JdbcBookDao implements BookDao {
 	}
 
 
-	public boolean addBook(String title, String author, int date, String edition) {
+	//TODO: add impl for keyWords
+	public boolean addBook(String title, String author, int date, String edition, String keyWords) {
 		boolean flag = true;
 
 		Connection conn = createConnection();

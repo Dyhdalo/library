@@ -11,6 +11,7 @@ public class Book implements Serializable{
 	private String author;
 
 	private String edition;
+	private String keyWords;
 
 	private int year;
 
@@ -93,5 +94,13 @@ public class Book implements Serializable{
 
 	public void setYear(int year) {
 		this.year = year;
+	}
+
+	public String getKeyWords() {
+		return keyWords;
+	}
+
+	public void setKeyWords(String keyWords) {
+		this.keyWords = keyWords;
 	}
 }

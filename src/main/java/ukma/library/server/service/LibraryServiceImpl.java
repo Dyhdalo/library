@@ -34,7 +34,7 @@ public class LibraryServiceImpl extends UnicastRemoteObject implements LibrarySe
 
 	@Override
 	public boolean addBook(Book book) throws RemoteException {
-		return bookDao.addBook(book.getTitle(), book.getAuthor(), book.getYear(), book.getEdition());
+		return bookDao.addBook(book.getTitle(), book.getAuthor(), book.getYear(), book.getEdition(), book.getKeyWords());
 	}
 
 	@Override
@@ -98,5 +98,10 @@ public class LibraryServiceImpl extends UnicastRemoteObject implements LibrarySe
 	// must return Book or null
 	public Book getBookById(Integer id) throws RemoteException{
 		return bookDao.getBook(id);
+	};
+
+	// TODO: Add implementation
+	public boolean updateBook(Book b) throws RemoteException{
+		return true;
 	};
 }

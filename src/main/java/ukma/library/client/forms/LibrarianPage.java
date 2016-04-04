@@ -321,7 +321,19 @@ public class LibrarianPage extends JFrame implements ActionListener{
 				JOptionPane.showMessageDialog(null, "Потрібно вибрати книгу!!!", "", JOptionPane.INFORMATION_MESSAGE);
 			}
 		} else if (e.getSource() == changeBook) {
-			System.out.println("changeBook");
+			int[] rows = allBooks.getSelectedRows();
+			if (rows.length > 0){
+				int bookId = (Integer)allBooks.getValueAt(rows[0], 0);
+				System.out.println(bookId);
+				try {
+					Book b = LibraryClient.library.getBookById(bookId);
+					new EditBookTable(b).showEventDemo();
+				} catch (RemoteException e1) {
+					e1.printStackTrace();
+				}
+			}else{
+				JOptionPane.showMessageDialog(null, "Потрібно вибрати книгу!!!", "", JOptionPane.INFORMATION_MESSAGE);
+			}
 		}else if (e.getSource() == showQueueOfBook) {
 			int[] rows = allBooks.getSelectedRows();
 			if (rows.length > 0){
