@@ -15,4 +15,6 @@ public interface UserDao {
 	public boolean addUser(User user);
 
 	public User getUserByName(String name);
+
+	public List<User> getAllUsersDebtors();
 }

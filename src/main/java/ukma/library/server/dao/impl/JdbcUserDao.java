@@ -21,6 +21,8 @@ public class JdbcUserDao implements UserDao {
 
     private static final String USER_TABLE_NAME = " acsm_b775c39c99325aa.User ";
     private static final String USER_ROLE_TABLE_NAME = " acsm_b775c39c99325aa.User_Role ";
+    private static final String Order_TABLE_NAME = " acsm_b775c39c99325aa.Order ";
+
 
     public JdbcUserDao() {
     }
@@ -68,6 +70,14 @@ public class JdbcUserDao implements UserDao {
                 + "on User.user_role=User_Role.id_role WHERE User.name = " + name;
         List<User> users = selectUserList(sql);
         return users == null ? null : users.get(0);
+    }
+
+    @Override
+    public List<User> getAllUsersDebtors() {
+        String sql = "SELECT * FROM" + USER_TABLE_NAME + "INNER JOIN " + Order_TABLE_NAME
+                 + "on User.id_user = Order.id_user WHERE date_return < date_completing ";
+        List<User> users = selectUserList(sql);
+        return null;
     }
 
     @Override

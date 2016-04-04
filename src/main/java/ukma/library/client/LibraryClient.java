@@ -34,6 +34,7 @@ public class LibraryClient{
 
 	private static ArrayList<User> users;
 	private static ArrayList<Queue> queues;
+	private static ArrayList<User> debtors;
 	
 	private static int idOfUser;
 	private static String roleOfUser;
@@ -87,8 +88,13 @@ public class LibraryClient{
 						} catch (RemoteException e1) {
 							e1.printStackTrace();
 						}
-						
-						librarianForm = new LibrarianPage(books, users);
+//						try {
+//							//debtors = (ArrayList<User>) library.getAllUsersDebtors();
+//						}
+//						catch (RemoteException e1){
+//							e1.printStackTrace();
+//						}
+						librarianForm = new LibrarianPage(books, users,debtors);
 
 					}else
 						if(roleOfUser.equals("Читач") && loginForm.getRole().getSelectedItem().equals("Читач")){

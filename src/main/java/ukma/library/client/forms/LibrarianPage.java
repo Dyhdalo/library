@@ -46,6 +46,7 @@ public class LibrarianPage extends JFrame implements ActionListener{
 	JPanel panel4;
 	JTable allBooks;
 	JTable allReaders;
+	JTable allDebtors;
 	
 	JTextArea debtors;
 	JTextArea accountingBooks;
@@ -70,7 +71,7 @@ public class LibrarianPage extends JFrame implements ActionListener{
 	private TableRowSorter<TableModel> rowSorterBooks;
 	private TableRowSorter<TableModel> rowSorterReaders;
 
-	public LibrarianPage(ArrayList<Book> books, ArrayList<User> users) {
+	public LibrarianPage(ArrayList<Book> books, ArrayList<User> users, ArrayList<User> debtorsList) {
 		super("Бібліотека НаУКМА");
 		setLocation(200, 200);
 
@@ -208,7 +209,9 @@ public class LibrarianPage extends JFrame implements ActionListener{
 		
 		debtors = new JTextArea("");
 		panel3.add(debtors, BorderLayout.CENTER);
-		
+
+		//allDebtors();
+
 		showDebtors = new JButton("Боржники");
 		showDebtors.addActionListener(this);
 		
@@ -241,7 +244,10 @@ public class LibrarianPage extends JFrame implements ActionListener{
 		JPanel newPanel4 = new JPanel();
 		newPanel4.add(showAccountingBooks);
 		newPanel4.add(showRankingOfBooks);
-		
+
+		//allDebtors.setModel(new ReadersTable(debtorsList));
+
+
 		panel4.add(newPanel4, BorderLayout.PAGE_END);
 
 		tabby.addTab("Книги", panel1);
@@ -284,6 +290,18 @@ public class LibrarianPage extends JFrame implements ActionListener{
 		allReadersPane.setSize(800, 300);
 
 		panel2.add(allReadersPane, BorderLayout.CENTER);
+	}
+
+	private void allDebtors(){
+		allDebtors = new JTable();
+		allDebtors.setPreferredScrollableViewportSize(new Dimension(700, 100));
+		allDebtors.setSize(800, 300);
+
+		JScrollPane allDebtorsPane = new JScrollPane(allDebtors);
+		allDebtorsPane.setPreferredSize(new Dimension(700, 100));
+		allDebtorsPane.setSize(800, 300);
+
+		panel4.add(allDebtorsPane, BorderLayout.CENTER);
 	}
 
 	private void allBooks() {
