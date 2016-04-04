@@ -121,7 +121,7 @@ public class JdbcBookDao implements BookDao {
 	}
 	
 	public List<Book> getActiveBooksByUser(int userId){
-		String sql = "SELECT * FROM "+Order_TABLE_NAME+"INNER JOIN"+COPY_TABLE_NAME+"on Order.id_instance=Instance.id_instance INNER JOIN"+BOOK_TABLE_NAME+"on Book.id_book=Instance.id_book WHERE Order.id_user = "+userId;
+		String sql = "SELECT * FROM "+Order_TABLE_NAME+"INNER JOIN"+COPY_TABLE_NAME+"on Order.id_instance=Instance.id_inst INNER JOIN"+BOOK_TABLE_NAME+"on Book.id_book=Instance.id_book WHERE Order.id_user = "+userId;
 		
 		ArrayList<Book> books = new ArrayList<Book>();
 		Connection conn = JdbcBookDao.createConnection();
