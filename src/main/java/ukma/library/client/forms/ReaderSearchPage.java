@@ -4,7 +4,9 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -12,8 +14,10 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
+import ukma.library.client.LibraryClient;
 import ukma.library.client.forms.tables.BooksTable;
 import ukma.library.server.entity.Book;
+import ukma.library.server.entity.Queue;
 
 public class ReaderSearchPage extends JFrame implements ActionListener{
 
@@ -27,9 +31,13 @@ public class ReaderSearchPage extends JFrame implements ActionListener{
 	private JTextField jtfFilterBooks = new JTextField();
 	private TableRowSorter<TableModel> rowSorterBooks;
 	
-	public ReaderSearchPage(ArrayList<Book> books){
+	int userId;
+	
+	public ReaderSearchPage(ArrayList<Book> books, int idOfUser){
 		super("Бібліотека НаУКМА | Читач");
 		setLocation(200, 200);
+		
+		userId = idOfUser;
 	
 		panel1 = new JPanel(new BorderLayout());
 		
@@ -114,7 +122,22 @@ public class ReaderSearchPage extends JFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == getInQueue) {
-			System.out.println("getInQueue");
+			int[] rows = allBooks.getSelectedRows();
+			if (rows.length > 0){
+				Queue queue = new Queue();
+				queue.setBookId((Integer)allBooks.getValueAt(rows[0], 0));
+                queue.setUserId(userId);
+                queue.setDate(new Date());
+                try {
+					LibraryClient.library.addQueue(queue);
+				} catch (RemoteException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+                JOptionPane.showMessageDialog(null, "Ви додані в чергу на цю книгу!!!", "", JOptionPane.INFORMATION_MESSAGE);
+			}else{
+				JOptionPane.showMessageDialog(null, "Потрібно вибрати книгу!!!", "", JOptionPane.INFORMATION_MESSAGE);
+			}
 		}else if (e.getSource() == haveCopies) {
 			System.out.println("haveCopies");
 		}

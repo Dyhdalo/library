@@ -101,7 +101,7 @@ public class LibraryClient{
 								e1.printStackTrace();
 							}
 							
-							readerForm = new ReaderSearchPage(books);
+							readerForm = new ReaderSearchPage(books, idOfUser);
 						}
 				
 			}
