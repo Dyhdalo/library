@@ -17,7 +17,7 @@ public class JdbcSearchDao implements SearchDao {
     private static PreparedStatement statement;
 
     private static final String QUEUE_TABLE_NAME = " acsm_b775c39c99325aa.queue ";
-    private static final String COPY_TABLE_NAME = " acsm_b775c39c99325aa.queue ";
+    private static final String COPY_TABLE_NAME = " acsm_b775c39c99325aa.instance ";
     private static final String USER_TABLE_NAME = " acsm_b775c39c99325aa.User ";
     private static final String USER_ROLE_TABLE_NAME = " acsm_b775c39c99325aa.User_Role ";
 
@@ -92,6 +92,24 @@ public class JdbcSearchDao implements SearchDao {
     public List<User> getQueueForBook(int book) {
         String sql = "SELECT * FROM" + QUEUE_TABLE_NAME + "INNER JOIN"+USER_TABLE_NAME+"on User.id_user=Queue.id_user INNER JOIN"+USER_ROLE_TABLE_NAME+"on User.user_role=User_Role.id_role WHERE Queue.id_book = " + book;
         return selectUserList(sql);
+    }
+
+    @Override
+    public void addCopy(Copy c) {
+        String sql = "INSERT INTO " + COPY_TABLE_NAME + "(id_book, status, ISBN) " +
+                "VALUES (?, ?, ?)";
+        try {
+            connection = createConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, c.getBookId());
+            statement.setInt(2, c.getStatus());
+            statement.setString(3, String.valueOf(c.getIsbn()));
+            statement .executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("ERROR INSERT COPY : " + c.toString() + " - " + e);
+        } finally {
+            closeConnection();
+        }
     }
 
     private List<Queue> selectQueueList(String sql) {
