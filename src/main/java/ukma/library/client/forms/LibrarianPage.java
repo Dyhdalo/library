@@ -252,8 +252,8 @@ public class LibrarianPage extends JFrame implements ActionListener{
 
 		tabby.addTab("Книги", panel1);
 		tabby.addTab("Читачі", panel2);
-		tabby.addTab("Облік літератури", panel3);
-		tabby.addTab("Боржники", panel4);
+		tabby.addTab("Боржники", panel3);
+		tabby.addTab("Облік літератури", panel4);
 		add(tabby);
 		
 		tabby.addChangeListener(new ChangeListener() {
