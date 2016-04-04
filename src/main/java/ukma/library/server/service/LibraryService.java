@@ -45,4 +45,6 @@ public interface LibraryService extends Remote{
 	public Book getBookById(Integer id) throws RemoteException;
 
 	public void updateBook(Book b) throws RemoteException;
+
+	public void addCopy(Copy c) throws RemoteException;
 }

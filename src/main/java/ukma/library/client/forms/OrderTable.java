@@ -137,9 +137,21 @@ public class OrderTable extends JFrame{
 
             try {
                 Book b = LibraryClient.library.getBookById(bookId);
-                Copy copy = LibraryClient.library.getFreeCopy(b);
-                order.setCopyId(copy.getIsbn());
-                LibraryClient.library.addOrder(order);
+                System.out.println(bookId);
+                System.out.println(b);
+                if(b != null) {
+                    Copy copy = LibraryClient.library.getFreeCopy(b);
+                    if(copy != null) {
+                        order.setCopyId(copy.getIsbn());
+                        LibraryClient.library.addOrder(order);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Не має вільних примірників. Станьте в чергу або спробуйте пізніше.", "", JOptionPane.INFORMATION_MESSAGE);
+                        return;
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Внутрішня помилка. Повторіть спробу пізніше.", "", JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
             } catch (RemoteException e1) {
                 e1.printStackTrace();
                 JOptionPane.showMessageDialog(null, "Внутрішня помилка. Повторіть спробу пізніше.", "", JOptionPane.INFORMATION_MESSAGE);
