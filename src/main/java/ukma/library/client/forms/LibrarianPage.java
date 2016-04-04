@@ -5,10 +5,12 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -16,14 +18,21 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.RowFilter;
 import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import ukma.library.client.LibraryClient;
 import ukma.library.client.forms.tables.BooksTable;
 import ukma.library.client.forms.tables.QueueTable;
+import ukma.library.client.forms.tables.ReadersTable;
 import ukma.library.server.entity.Book;
+import ukma.library.server.entity.User;
 
 public class LibrarianPage extends JFrame implements ActionListener{
 
@@ -39,13 +48,20 @@ public class LibrarianPage extends JFrame implements ActionListener{
 	JButton addBook;
 	JButton addCopy;
 	JButton changeBook;
+	JButton showQueueOfBook;
+	JButton showOrdersOfReader;
 	JButton addReader;
 	JButton changeReader;
 	JButton addReaderToQueue;
 	JButton addOrder;
 	JButton closeOrder;
+	
+	private JTextField jtfFilterBooks = new JTextField();
+	private JTextField jtfFilterReaders = new JTextField();
+	private TableRowSorter<TableModel> rowSorterBooks;
+	private TableRowSorter<TableModel> rowSorterReaders;
 
-	public LibrarianPage() {
+	public LibrarianPage(ArrayList<Book> books, ArrayList<User> users) {
 		super("Бібліотека НаУКМА");
 		setLocation(200, 200);
 
@@ -54,6 +70,8 @@ public class LibrarianPage extends JFrame implements ActionListener{
 		panel1 = new JPanel(new BorderLayout());
 
 		allBooks();
+		
+		allBooks.setModel(new BooksTable(books));
 
 		addBook = new JButton("Додати книгу");
 		addBook.addActionListener(this);
@@ -63,11 +81,55 @@ public class LibrarianPage extends JFrame implements ActionListener{
 
 		changeBook = new JButton("Редагувати книгу");
 		changeBook.addActionListener(this);
+		
+		showQueueOfBook = new JButton("Черга на книгу");
+		showQueueOfBook.addActionListener(this);
 
-		JPanel newPanel = new JPanel();
-		newPanel.add(addBook);
-		newPanel.add(addCopy);
-		newPanel.add(changeBook);
+		rowSorterBooks = new TableRowSorter<>(allBooks.getModel());
+		
+		allBooks.setRowSorter(rowSorterBooks);
+		
+		jtfFilterBooks.getDocument().addDocumentListener(new DocumentListener(){
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                String text = jtfFilterBooks.getText();
+
+                if (text.trim().length() == 0) {
+                	rowSorterBooks.setRowFilter(null);
+                } else {
+                	rowSorterBooks.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                String text = jtfFilterBooks.getText();
+
+                if (text.trim().length() == 0) {
+                	rowSorterBooks.setRowFilter(null);
+                } else {
+                	rowSorterBooks.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                }
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+        });
+		
+		JPanel newPanel = new JPanel(new BorderLayout());
+		newPanel.add(showQueueOfBook, BorderLayout.NORTH);
+		newPanel.add(addBook, BorderLayout.WEST);
+		newPanel.add(changeBook, BorderLayout.CENTER);
+		newPanel.add(addCopy, BorderLayout.EAST);
+		
+		JPanel SearchPanel1 = new JPanel(new BorderLayout());
+		SearchPanel1.add(new JLabel("Пошук: "), BorderLayout.WEST);
+		SearchPanel1.add(jtfFilterBooks, BorderLayout.CENTER);
+		newPanel.add(SearchPanel1, BorderLayout.AFTER_LAST_LINE);
 
 		panel1.add(newPanel, BorderLayout.PAGE_END);
 
@@ -75,15 +137,61 @@ public class LibrarianPage extends JFrame implements ActionListener{
 		
 		allReaders();
 		
+		allReaders.setModel(new ReadersTable(users));
+		
 		addReader = new JButton("Додати читача");
 		addReader.addActionListener(this);
 
 		changeReader = new JButton("Редагувати читача");
 		changeReader.addActionListener(this);
+		
+		showOrdersOfReader = new JButton("Замовлення читача");
+		showOrdersOfReader.addActionListener(this);
+		
+		rowSorterReaders = new TableRowSorter<>(allReaders.getModel());
+		
+		allReaders.setRowSorter(rowSorterReaders);
+		
+		jtfFilterReaders.getDocument().addDocumentListener(new DocumentListener(){
 
-		JPanel newPanel2 = new JPanel();
-		newPanel2.add(addReader);
-		newPanel2.add(changeReader);
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                String text = jtfFilterReaders.getText();
+
+                if (text.trim().length() == 0) {
+                	rowSorterReaders.setRowFilter(null);
+                } else {
+                	rowSorterReaders.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                String text = jtfFilterReaders.getText();
+
+                if (text.trim().length() == 0) {
+                	rowSorterReaders.setRowFilter(null);
+                } else {
+                	rowSorterReaders.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                }
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+        });
+
+		JPanel newPanel2 = new JPanel(new BorderLayout());
+		newPanel2.add(addReader, BorderLayout.WEST);
+		newPanel2.add(changeReader, BorderLayout.CENTER);
+		newPanel2.add(showOrdersOfReader, BorderLayout.EAST);
+		
+		JPanel SearchPanel2 = new JPanel(new BorderLayout());
+		SearchPanel2.add(new JLabel("Пошук: "), BorderLayout.WEST);
+		SearchPanel2.add(jtfFilterReaders, BorderLayout.CENTER);
+		newPanel2.add(SearchPanel2, BorderLayout.AFTER_LAST_LINE);
 
 		panel2.add(newPanel2, BorderLayout.PAGE_END);
 
@@ -135,6 +243,14 @@ public class LibrarianPage extends JFrame implements ActionListener{
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		pack();
 		setVisible(true);
+	}
+
+	public TableRowSorter<TableModel> getRowSorterBooks() {
+		return rowSorterBooks;
+	}
+
+	public TableRowSorter<TableModel> getRowSorterReaders() {
+		return rowSorterReaders;
 	}
 
 	private void allOrders() {
@@ -214,10 +330,15 @@ public class LibrarianPage extends JFrame implements ActionListener{
 			}
 		} else if (e.getSource() == changeBook) {
 			System.out.println("changeBook");
-		}else if (e.getSource() == addReader) {
+		}else if (e.getSource() == showQueueOfBook) {
+			System.out.println("showQueueOfBook");
+		}
+		else if (e.getSource() == addReader) {
 			(new ReaderPage()).showAddReader();
 		}else if (e.getSource() == changeReader) {
 			System.out.println("changeReader");
+		}else if (e.getSource() == showOrdersOfReader) {
+			System.out.println("showOrdersOfReader");
 		}else if (e.getSource() == addReaderToQueue) {
 			AddReaderToQueue page = new AddReaderToQueue();
 			List<Book> books = null;

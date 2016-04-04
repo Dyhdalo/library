@@ -18,4 +18,8 @@ public interface OrderDao {
 
     public boolean addOrder(Order order);
 
+	List<Order> getActiveOrdersByUser(int id);
+
+	boolean closeOrder(int orderId);
+
 }

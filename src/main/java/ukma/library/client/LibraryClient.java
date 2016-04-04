@@ -76,8 +76,6 @@ public class LibraryClient{
 						loginForm.setVisible(false);
 						loginForm.dispose();
 						
-						librarianForm = new LibrarianPage();
-						
 						try {
 							books = (ArrayList<Book>) library.getAllBooks();
 						} catch (RemoteException e1) {
@@ -89,9 +87,9 @@ public class LibraryClient{
 						} catch (RemoteException e1) {
 							e1.printStackTrace();
 						}
+						
+						librarianForm = new LibrarianPage(books, users);
 
-						librarianForm.getAllBooksTable().setModel(new BooksTable(books));
-						librarianForm.getAllReadersTable().setModel(new ReadersTable(users));
 						librarianForm.getAllQueuesTable().setModel(new QueueTable(queues, books));
 					}else
 						if(roleOfUser.equals("Читач") && loginForm.getRole().getSelectedItem().equals("Читач")){
