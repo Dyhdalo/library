@@ -1,13 +1,18 @@
 package ukma.library.server.dao.impl;
 
 import org.springframework.jdbc.core.RowMapper;
+
 import ukma.library.server.dao.OrderDao;
 import ukma.library.server.entity.Order;
 import ukma.library.server.service.LibraryService;
 
 
+
+
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class JdbcOrderDao implements OrderDao {
@@ -81,9 +86,18 @@ public class JdbcOrderDao implements OrderDao {
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, order.getCopyId());
             preparedStatement.setInt(2, order.getUserId());
-            preparedStatement.setDate(3, new Date(order.getIssueDate().getTime()));
-            preparedStatement.setDate(4, new Date(order.getReturnDate().getTime()));
-            preparedStatement.setDate(5, new Date(order.getComplitingDate().getTime()));
+            
+            Date date = new Date(Calendar.getInstance().getTime().getTime());
+            
+            Calendar cal = new GregorianCalendar();
+            cal.setTimeInMillis(date.getTime());
+            cal.add(Calendar.DATE, 62);
+            
+            Date date1 = new Date(cal.getTimeInMillis());
+            
+            preparedStatement.setDate(3, date);
+            preparedStatement.setDate(4, date1);
+            preparedStatement.setDate(5, null);
             preparedStatement .executeUpdate();
         } catch (SQLException e) {
             return false;
