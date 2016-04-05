@@ -4,10 +4,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
 import ukma.library.client.LibraryClient;
+import ukma.library.client.forms.tables.BooksTable;
+import ukma.library.client.forms.tables.ReadersTable;
+import ukma.library.server.entity.Book;
 import ukma.library.server.entity.User;
 
 public class ReaderPage extends JFrame {
@@ -102,6 +106,15 @@ public class ReaderPage extends JFrame {
 
             try {
                 LibraryClient.library.addUser(user);
+            } catch (RemoteException e1) {
+                e1.printStackTrace();
+            }
+            
+            try {
+                // Reinitialization of book list
+                ArrayList<User> users = (ArrayList<User>) LibraryClient.library.getAllUsers();
+                LibraryClient.librarianForm.getAllReadersTable().setModel(new ReadersTable(users));
+                LibraryClient.librarianForm.getRowSorterReaders().setModel(LibraryClient.librarianForm.getAllReadersTable().getModel());
             } catch (RemoteException e1) {
                 e1.printStackTrace();
             }
