@@ -101,6 +101,23 @@ public class JdbcUserDao implements UserDao {
         return true;
     }
 
+    @Override
+    public void updateUser(User user) {
+        String sql = "UPDATE"+ USER_TABLE_NAME + "SET user.name = ?, user.phone = ?, user.password = ? WHERE  user.id_user = ?";
+        try {
+            connection = createConnection();
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, user.getName());
+            statement.setString(2, user.getPhone());
+            statement.setString(3, user.getPassword());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        closeConnection();
+    }
+
+
     private List<User> selectUserList(String sql) {
         ArrayList<User> users = new ArrayList<User>();
         try {

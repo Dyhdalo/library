@@ -17,4 +17,8 @@ public interface UserDao {
 	public User getUserByName(String name);
 
 	public List<User> getAllUsersDebtors();
+
+
+	void updateUser(User user);
+
 }

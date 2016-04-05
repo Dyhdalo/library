@@ -4,14 +4,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 
 import javax.swing.*;
 
 import ukma.library.client.LibraryClient;
-import ukma.library.client.forms.tables.BooksTable;
-import ukma.library.client.forms.tables.ReadersTable;
-import ukma.library.server.entity.Book;
 import ukma.library.server.entity.User;
 
 public class ReaderPage extends JFrame {
@@ -23,10 +19,22 @@ public class ReaderPage extends JFrame {
     JComboBox role;
     JButton addButton;
     JButton backButton;
+    JButton updateButton;
+
+    private User user;
 
     final String[] roles = {"LIBRARIAN", "USER"};
 
     public ReaderPage() {
+        showGUI();
+    }
+
+    public ReaderPage(User user){
+        this.user = user;
+        showGUI();
+    }
+
+    private void showGUI (){
         this.setSize(350,300);
         this.setLayout(new GridLayout(4, 1));
 
@@ -41,14 +49,12 @@ public class ReaderPage extends JFrame {
         passwordField = new JPasswordField(10);
         role = new JComboBox(roles);
         addButton = new JButton("OK");
+        updateButton = new JButton("Зберегти");
         backButton = new JButton("Повернутися назад");
 
         addButton.addActionListener(new AddButtonClickListener());
+        updateButton.addActionListener(new UpdateButtonClickListener());
         backButton.addActionListener(new BackButtonClickListener());
-
-    }
-
-    public ReaderPage(int userId){
 
     }
 
@@ -74,6 +80,27 @@ public class ReaderPage extends JFrame {
         this.setVisible(true);
     }
 
+    void showUpdateReader() {
+
+        nameField.setText(this.user.getName());
+        phoneField.setText(this.user.getPhone());
+        passwordField.setText(this.user.getPassword());
+
+        mainPanel.add(new JLabel("Введіть нове ім'я: "));
+        mainPanel.add(nameField);
+        mainPanel.add(new JLabel("Введіть новий номер телефону: "));
+        mainPanel.add(phoneField);
+        mainPanel.add(new JLabel("Введіть новий пароль: "));
+        mainPanel.add(passwordField);
+        this.add(mainPanel);
+        this.add(panel);
+        panel.add(updateButton, BorderLayout.PAGE_END);
+        panel.add(backButton);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setVisible(true);
+    }
+
+
     public JButton getButton(){
         return this.addButton;
     }
@@ -87,6 +114,8 @@ public class ReaderPage extends JFrame {
     public JComboBox getRole(){
         return this.role;
     }
+
+
 
     private void back(){
         setVisible(false);
@@ -109,21 +138,26 @@ public class ReaderPage extends JFrame {
             } catch (RemoteException e1) {
                 e1.printStackTrace();
             }
-            
-            try {
-                // Reinitialization of book list
-                ArrayList<User> users = (ArrayList<User>) LibraryClient.library.getAllUsers();
-                LibraryClient.librarianForm.getAllReadersTable().setModel(new ReadersTable(users));
-                LibraryClient.librarianForm.getRowSorterReaders().setModel(LibraryClient.librarianForm.getAllReadersTable().getModel());
-            } catch (RemoteException e1) {
-                e1.printStackTrace();
-            }
         }
     }
 
     private class BackButtonClickListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             back();
+        }
+    }
+
+    private class UpdateButtonClickListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            user.setName(nameField.getText());
+            user.setPhone(phoneField.getText());
+            user.setPassword(passwordField.getText());
+
+            try {
+                LibraryClient.library.updateUser(user);
+            } catch (RemoteException e1) {
+                e1.printStackTrace();
+            }
         }
     }
 }

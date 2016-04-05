@@ -117,4 +117,14 @@ public class LibraryServiceImpl extends UnicastRemoteObject implements LibrarySe
 	public void addCopy(Copy c) throws RemoteException{
 		searchDao.addCopy(c);
 	}
+
+	@Override
+	public void updateUser(User user) throws RemoteException {
+		userDao.updateUser(user);
+	}
+
+	@Override
+	public User getUserById(Integer id) throws RemoteException {
+		return userDao.getUserById(id);
+	}
 }

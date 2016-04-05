@@ -368,7 +368,14 @@ public class LibrarianPage extends JFrame implements ActionListener{
 		}else if (e.getSource() == changeReader) {
 			int[] rows = allReaders.getSelectedRows();
 			if (rows.length > 0){
-				ReaderPage readerPage = new ReaderPage((Integer)allReaders.getValueAt(rows[0], 0));
+				int userId = (Integer)allReaders.getValueAt(rows[0], 0);
+				try {
+					System.out.println(userId);
+					User user = LibraryClient.library.getUserById(userId);
+					(new ReaderPage(user)).showUpdateReader();
+				} catch (RemoteException e1) {
+					e1.printStackTrace();
+				}
 			}else{
 				JOptionPane.showMessageDialog(null, "Потрібно вибрати читача!!!", "", JOptionPane.INFORMATION_MESSAGE);
 			}
