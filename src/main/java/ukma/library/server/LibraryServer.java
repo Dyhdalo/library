@@ -27,9 +27,9 @@ public class LibraryServer {
 	
     public static void main(String[] args) throws RemoteException,IllegalArgumentException, NotBoundException {
 		
-    	LibraryServer server = new LibraryServer("8888");
+    	LibraryServer server = new LibraryServer("8880");
         server.runServer();
-        System.out.println("Server started on port 8888");
+        System.out.println("Server started on port 8880");
 	
 	}
 	

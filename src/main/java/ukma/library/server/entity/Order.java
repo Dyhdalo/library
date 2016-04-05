@@ -14,13 +14,15 @@ public class Order implements Serializable{
     private Date complitingDate;
 
     public Order() {
+        this.issueDate = new Date(System.currentTimeMillis());
+        this.returnDate = new Date(issueDate.getTime() + (7 * 24 * 3600 * 1000));
     }
 
     public Order(int id, int userId, int copyId) {
         this.id = id;
         this.userId = userId;
         this.copyId = copyId;
-        this.issueDate = new Date();
+        this.issueDate = new Date(System.currentTimeMillis());
         this.returnDate = new Date(issueDate.getTime() + (7 * 24 * 3600 * 1000));
     }
 

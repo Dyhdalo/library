@@ -79,7 +79,9 @@ public class JdbcSearchDao implements SearchDao {
 
     @Override
     public Copy getFreeCopy(int id) {
-        return null;
+        String sql = "SELECT * FROM" + COPY_TABLE_NAME + " WHERE id_book = " + id;
+        List<Copy> copies = selectCopyList(sql);
+        return copies.isEmpty() ? null : copies.get(0);
     }
 
     @Override
@@ -110,6 +112,25 @@ public class JdbcSearchDao implements SearchDao {
         } finally {
             closeConnection();
         }
+    }
+
+    private List<Copy> selectCopyList(String sql) {
+        ArrayList<Copy> copies = new ArrayList<Copy>();
+        try {
+            connection = createConnection();
+            statement = connection.prepareStatement(sql);
+            resultSet = statement.executeQuery();
+            int row = 0;
+            while (resultSet.next()) {
+                copies.add(copyMapper.mapRow(resultSet, row++));
+            }
+
+        } catch (SQLException e) {
+            System.out.println("SQL Error: " + e);
+        } finally {
+            closeConnection();
+        }
+        return copies;
     }
 
     private List<Queue> selectQueueList(String sql) {
@@ -161,6 +182,18 @@ public class JdbcSearchDao implements SearchDao {
         }
         return users;
     }
+
+    private static final RowMapper<Copy> copyMapper = new RowMapper<Copy>() {
+
+        public Copy mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Copy copy = new Copy();
+            copy.setId(rs.getInt("id_inst"));
+            copy.setBookId(rs.getInt("id_book"));
+            copy.setStatus(rs.getInt("status"));
+            copy.setIsbn(Integer.valueOf(rs.getString("ISBN")));
+            return copy;
+        }
+    };
     
     private static final RowMapper<User> userMapper = new RowMapper<User>() {
 

@@ -44,7 +44,7 @@ public class LibraryClient{
 	
 	public static void main(String[] args) throws RemoteException, NamingException, MalformedURLException, NotBoundException{
 		
-		Registry registry = LocateRegistry.getRegistry("localhost", 8888);
+		Registry registry = LocateRegistry.getRegistry("localhost", 8880);
 		
 		library = (LibraryService) registry.lookup(SERVER_NAME);
 		

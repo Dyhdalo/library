@@ -142,7 +142,7 @@ public class OrderTable extends JFrame{
                 if(b != null) {
                     Copy copy = LibraryClient.library.getFreeCopy(b);
                     if(copy != null) {
-                        order.setCopyId(copy.getIsbn());
+                        order.setCopyId(copy.getId());
                         LibraryClient.library.addOrder(order);
                     } else {
                         JOptionPane.showMessageDialog(null, "Не має вільних примірників. Станьте в чергу або спробуйте пізніше.", "", JOptionPane.INFORMATION_MESSAGE);

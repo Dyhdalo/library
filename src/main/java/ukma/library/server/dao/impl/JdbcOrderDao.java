@@ -73,7 +73,7 @@ public class JdbcOrderDao implements OrderDao {
 
     @Override
     public boolean addOrder(Order order) {
-        String sql = "INSERT INTO " + Order_TABLE_NAME + "(d_instance, id_user, " +
+        String sql = "INSERT INTO " + Order_TABLE_NAME + "(id_instance, id_user, " +
                 "date_issue, date_return, date_completing) VALUES (?, ?, ?, ?, ?)";
         PreparedStatement preparedStatement = null;
         try {
@@ -81,9 +81,9 @@ public class JdbcOrderDao implements OrderDao {
             preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, order.getCopyId());
             preparedStatement.setInt(2, order.getUserId());
-            preparedStatement.setDate(3, new Date(order.getIssueDate().getTime()));
-            preparedStatement.setDate(4, new Date(order.getReturnDate().getTime()));
-            preparedStatement.setDate(5, new Date(order.getComplitingDate().getTime()));
+            preparedStatement.setDate(3, order.getIssueDate()==null? null:new Date(order.getIssueDate().getTime()));
+            preparedStatement.setDate(4, order.getReturnDate()==null? null:new Date(order.getReturnDate().getTime()));
+            preparedStatement.setDate(5, order.getComplitingDate()==null? null:new Date(order.getComplitingDate().getTime()));
             preparedStatement .executeUpdate();
         } catch (SQLException e) {
             return false;

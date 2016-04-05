@@ -3,6 +3,9 @@ package ukma.library.server.entity;
 import java.io.Serializable;
 
 public class Copy implements Serializable{
+
+    private int id;
+
     public int getIsbn() {
         return isbn;
     }
@@ -21,6 +24,18 @@ public class Copy implements Serializable{
 
     public int getStatus() {
         return status.equals(Status.FREE)? 1:2;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setStatus(int status) {
+        this.status = status == 1? Status.FREE:Status.RESERVED;
+    }
+
+    public int getId() {
+        return id;
     }
 
 
@@ -82,3 +97,4 @@ public class Copy implements Serializable{
 //        }
     }
 }
+
